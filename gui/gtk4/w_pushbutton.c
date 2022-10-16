@@ -192,8 +192,8 @@ int Gtk4Gui_WPushButton_Setup(GWEN_WIDGET *w)
         GtkWidget *gImage;
 
         gImage=gtk_image_new_from_file(GWEN_Buffer_GetStart(tbuf));
-        gtk_button_set_image(GTK_BUTTON(g), gImage);
-        gtk_button_set_image_position(GTK_BUTTON(g), GTK_POS_LEFT);
+        gtk_widget_set_halign(gImage, GTK_ALIGN_START);
+        gtk_button_set_child(GTK_BUTTON(g), gImage);
       }
       GWEN_Buffer_free(tbuf);
     }
