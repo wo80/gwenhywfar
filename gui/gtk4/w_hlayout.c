@@ -130,10 +130,12 @@ int Gtk4Gui_WHLayout_AddChildGuiWidget(GWEN_WIDGET *w, GWEN_WIDGET *wChild)
 
   cflags=GWEN_Widget_GetFlags(wChild);
 
-  gtk_box_pack_start(GTK_BOX(g), gChild,
-                     (cflags & GWEN_WIDGET_FLAGS_FILLX)?TRUE:FALSE,
-                     (cflags & GWEN_WIDGET_FLAGS_FILLX)?TRUE:FALSE,
-                     0);
+  gtk_box_append(GTK_BOX(g), gChild);
+
+  if (cflags & GWEN_WIDGET_FLAGS_FILLX) {
+    gtk_widget_set_hexpand(gChild, TRUE);
+    gtk_widget_set_halign(gChild, GTK_ALIGN_FILL);
+  }
 
   return 0;
 }
