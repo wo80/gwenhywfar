@@ -35,16 +35,16 @@ int Gtk4Gui_WDialog_SetIntProperty(GWEN_WIDGET *w,
   case GWEN_DialogProperty_Width: {
     gint width, height;
 
-    gtk_window_get_size(GTK_WINDOW(g), &width, &height);
-    gtk_window_resize(GTK_WINDOW(g), value, height);
+    gtk_window_get_default_size(GTK_WINDOW(g), &width, &height);
+    gtk_window_set_default_size(GTK_WINDOW(g), value, height);
     return 0;
   }
 
   case GWEN_DialogProperty_Height: {
     gint width, height;
 
-    gtk_window_get_size(GTK_WINDOW(g), &width, &height);
-    gtk_window_resize(GTK_WINDOW(g), width, value);
+    gtk_window_get_default_size(GTK_WINDOW(g), &width, &height);
+    gtk_window_set_default_size(GTK_WINDOW(g), width, value);
     return 0;
   }
 
@@ -83,14 +83,14 @@ int Gtk4Gui_WDialog_GetIntProperty(GWEN_WIDGET *w,
   case GWEN_DialogProperty_Width: {
     gint width, height;
 
-    gtk_window_get_size(GTK_WINDOW(g), &width, &height);
+    gtk_window_get_default_size(GTK_WINDOW(g), &width, &height);
     return width;
   }
 
   case GWEN_DialogProperty_Height: {
     gint width, height;
 
-    gtk_window_get_size(GTK_WINDOW(g), &width, &height);
+    gtk_window_get_default_size(GTK_WINDOW(g), &width, &height);
     return height;
   }
 
@@ -172,9 +172,21 @@ int Gtk4Gui_WDialog_AddChildGuiWidget(GWEN_WIDGET *w, GWEN_WIDGET *wChild)
   gChild=GTK_WIDGET(GWEN_Widget_GetImplData(wChild, GTK4_DIALOG_WIDGET_REAL));
   assert(gChild);
 
-  gtk_container_add(GTK_CONTAINER(g), gChild);
+  /*
+     Generic gtk_container_add(...) is no longer available in GTK4, see
+     https://docs.gtk.org/gtk4/migrating-3to4.html#reduce-the-use-of-generic-container-apis
+  */
 
-  return 0;
+  switch (GWEN_Widget_GetType(w)) {
+  case GWEN_Widget_TypeDialog:
+    gtk_window_set_child(GTK_WINDOW(g), gChild);
+    break;
+  default:
+    DBG_ERROR(GWEN_LOGDOMAIN, "Widget type not implemented for Gtk4Gui_WDialog_AddChildGuiWidget: %d", GWEN_Widget_GetType(w));
+    break;
+  }
+  
+  return -1;
 }
 
 
@@ -186,7 +198,7 @@ int Gtk4Gui_WDialog_Setup(GWEN_WIDGET *w)
 
   s=GWEN_Widget_GetText(w, 0);
 
-  g=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  g=gtk_window_new();
   gtk_window_set_modal(GTK_WINDOW(g), TRUE);
   if (s && *s)
     gtk_window_set_title(GTK_WINDOW(g), s);
