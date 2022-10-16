@@ -162,10 +162,13 @@ int Gtk4Gui_WGroupBox_AddChildGuiWidget(GWEN_WIDGET *w, GWEN_WIDGET *wChild)
 
   cflags=GWEN_Widget_GetFlags(wChild);
 
-  gtk_box_pack_start(GTK_BOX(g), gChild,
-                     (cflags & GWEN_WIDGET_FLAGS_FILLY)?TRUE:FALSE,
-                     (cflags & GWEN_WIDGET_FLAGS_FILLY)?TRUE:FALSE,
-                     0);
+  gtk_box_append(GTK_BOX(g), gChild);
+  gtk_box_set_spacing(GTK_BOX(g), 3);
+
+  if (cflags & GWEN_WIDGET_FLAGS_FILLY) {
+    gtk_widget_set_vexpand(gChild, TRUE);
+    gtk_widget_set_valign(gChild, GTK_ALIGN_FILL);
+  }
 
   return 0;
 }
@@ -186,7 +189,7 @@ int Gtk4Gui_WGroupBox_Setup(GWEN_WIDGET *w)
 
   gContent=gtk_box_new(GTK_ORIENTATION_VERTICAL,
                        GTK4_GUI_DIALOG_DEFAULT_BOX_SPACING);
-  gtk_container_add(GTK_CONTAINER(g), gContent);
+  gtk_frame_set_child(GTK_FRAME(g), gContent);
 
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) gContent);
