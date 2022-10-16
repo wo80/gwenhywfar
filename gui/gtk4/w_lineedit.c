@@ -101,7 +101,7 @@ int Gtk4Gui_WLineEdit_SetCharProperty(GWEN_WIDGET *w,
   switch (prop) {
   case GWEN_DialogProperty_Value:
     if (value && *value)
-      gtk_entry_set_text(GTK_ENTRY(g), value);
+      gtk_editable_set_text(GTK_EDITABLE(g), value);
     return 0;
   default:
     break;
@@ -128,7 +128,7 @@ const char *Gtk4Gui_WLineEdit_GetCharProperty(GWEN_WIDGET *w,
 
   switch (prop) {
   case GWEN_DialogProperty_Value:
-    return gtk_entry_get_text(GTK_ENTRY(g));
+    return gtk_editable_get_text(GTK_EDITABLE(g));
   default:
     break;
   }
@@ -200,7 +200,7 @@ int Gtk4Gui_WLineEdit_Setup(GWEN_WIDGET *w)
   /* create widget */
   g=gtk_entry_new();
   if (s && *s)
-    gtk_entry_set_text(GTK_ENTRY(g), s);
+    gtk_editable_set_text(GTK_EDITABLE(g), s);
   gtk_entry_set_visibility(GTK_ENTRY(g), text_is_visible);
 
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
