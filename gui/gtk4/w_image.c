@@ -11,7 +11,7 @@
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WImage_SetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WImage_SetIntProperty(GWEN_WIDGET *w,
                                   GWEN_DIALOG_PROPERTY prop,
                                   int index,
                                   int value,
@@ -19,7 +19,7 @@ int Gtk3Gui_WImage_SetIntProperty(GWEN_WIDGET *w,
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -45,14 +45,14 @@ int Gtk3Gui_WImage_SetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WImage_GetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WImage_GetIntProperty(GWEN_WIDGET *w,
                                   GWEN_DIALOG_PROPERTY prop,
                                   int index,
                                   int defaultValue)
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -75,7 +75,7 @@ int Gtk3Gui_WImage_GetIntProperty(GWEN_WIDGET *w,
 
 
 
-int Gtk3Gui_WImage_Setup(GWEN_WIDGET *w)
+int Gtk4Gui_WImage_Setup(GWEN_WIDGET *w)
 {
   GtkWidget *g;
   uint32_t flags;
@@ -106,11 +106,11 @@ int Gtk3Gui_WImage_Setup(GWEN_WIDGET *w)
   g=gtk_image_new_from_file(GWEN_Buffer_GetStart(tbuf));
   GWEN_Buffer_free(tbuf);
 
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_REAL, (void *) g);
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_CONTENT, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 
-  GWEN_Widget_SetSetIntPropertyFn(w, Gtk3Gui_WImage_SetIntProperty);
-  GWEN_Widget_SetGetIntPropertyFn(w, Gtk3Gui_WImage_GetIntProperty);
+  GWEN_Widget_SetSetIntPropertyFn(w, Gtk4Gui_WImage_SetIntProperty);
+  GWEN_Widget_SetGetIntPropertyFn(w, Gtk4Gui_WImage_GetIntProperty);
 
   if (wParent)
     GWEN_Widget_AddChildGuiWidget(wParent, w);

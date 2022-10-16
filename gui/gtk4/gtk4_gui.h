@@ -7,28 +7,28 @@
  *          Please see toplevel file COPYING for license details           *
  ***************************************************************************/
 
-#ifndef GTK3_GUI_H
-#define GTK3_GUI_H
+#ifndef GTK4_GUI_H
+#define GTK4_GUI_H
 
 
 #include <gtk/gtk.h>
 
 
 #if (defined __GNUC__ && (! defined (__sun)) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))) || defined _MSC_VER
-# ifdef BUILDING_GTK3_GUI
-#   define GTK3GUI_API __attribute__ ((visibility("default")))
+# ifdef BUILDING_GTK4_GUI
+#   define GTK4GUI_API __attribute__ ((visibility("default")))
 # else
-#   define GTK3GUI_API
+#   define GTK4GUI_API
 # endif
 #else
-# define GTK3GUI_API
+# define GTK4GUI_API
 #endif
 
 #include <gwenhywfar/gui.h>
 
 
 
-GTK3GUI_API GWEN_GUI *Gtk3_Gui_new();
+GTK4GUI_API GWEN_GUI *Gtk4_Gui_new();
 
 
 

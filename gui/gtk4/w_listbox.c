@@ -13,7 +13,7 @@
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WListBox_SetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WListBox_SetIntProperty(GWEN_WIDGET *w,
                                     GWEN_DIALOG_PROPERTY prop,
                                     int index,
                                     int value,
@@ -21,7 +21,7 @@ int Gtk3Gui_WListBox_SetIntProperty(GWEN_WIDGET *w,
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_CONTENT));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_CONTENT));
   assert(g);
 
   switch (prop) {
@@ -139,14 +139,14 @@ int Gtk3Gui_WListBox_SetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WListBox_GetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WListBox_GetIntProperty(GWEN_WIDGET *w,
                                     GWEN_DIALOG_PROPERTY prop,
                                     int index,
                                     int defaultValue)
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_CONTENT));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_CONTENT));
   assert(g);
 
   switch (prop) {
@@ -225,7 +225,7 @@ int Gtk3Gui_WListBox_GetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
                                      GWEN_DIALOG_PROPERTY prop,
                                      GWEN_UNUSED int index,
                                      const char *value,
@@ -233,7 +233,7 @@ int Gtk3Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_CONTENT));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_CONTENT));
   assert(g);
 
   switch (prop) {
@@ -379,14 +379,14 @@ int Gtk3Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-const char *Gtk3Gui_WListBox_GetCharProperty(GWEN_WIDGET *w,
+const char *Gtk4Gui_WListBox_GetCharProperty(GWEN_WIDGET *w,
                                              GWEN_DIALOG_PROPERTY prop,
                                              int index,
                                              const char *defaultValue)
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_CONTENT));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_CONTENT));
   assert(g);
 
   switch (prop) {
@@ -412,11 +412,11 @@ const char *Gtk3Gui_WListBox_GetCharProperty(GWEN_WIDGET *w,
         cnt++;
         le=g_list_next(le);
       } /* while */
-      GWEN_Widget_SetText(w, GTK3_DIALOG_STRING_TITLE, GWEN_Buffer_GetStart(tbuf));
+      GWEN_Widget_SetText(w, GTK4_DIALOG_STRING_TITLE, GWEN_Buffer_GetStart(tbuf));
       GWEN_Buffer_free(tbuf);
 
       g_list_free(cols);
-      return GWEN_Widget_GetText(w, GTK3_DIALOG_STRING_TITLE);
+      return GWEN_Widget_GetText(w, GTK4_DIALOG_STRING_TITLE);
     }
     return defaultValue;
   }
@@ -455,11 +455,11 @@ const char *Gtk3Gui_WListBox_GetCharProperty(GWEN_WIDGET *w,
             cnt++;
             le=g_list_next(le);
           } /* while */
-          GWEN_Widget_SetText(w, GTK3_DIALOG_STRING_VALUE, GWEN_Buffer_GetStart(tbuf));
+          GWEN_Widget_SetText(w, GTK4_DIALOG_STRING_VALUE, GWEN_Buffer_GetStart(tbuf));
           GWEN_Buffer_free(tbuf);
 
           g_list_free(cols);
-          result=GWEN_Widget_GetText(w, GTK3_DIALOG_STRING_VALUE);
+          result=GWEN_Widget_GetText(w, GTK4_DIALOG_STRING_VALUE);
           gtk_tree_path_free(path);
           return result;
         }
@@ -482,7 +482,7 @@ const char *Gtk3Gui_WListBox_GetCharProperty(GWEN_WIDGET *w,
 
 
 
-static void Gtk3Gui_WListBox_CursorChanged_handler(GWEN_UNUSED GtkTreeView *g, gpointer data)
+static void Gtk4Gui_WListBox_CursorChanged_handler(GWEN_UNUSED GtkTreeView *g, gpointer data)
 {
   GWEN_WIDGET *w;
   int rv;
@@ -493,14 +493,14 @@ static void Gtk3Gui_WListBox_CursorChanged_handler(GWEN_UNUSED GtkTreeView *g, g
                             GWEN_DialogEvent_TypeActivated,
                             GWEN_Widget_GetName(w));
   if (rv==GWEN_DialogEvent_ResultAccept)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
   else if (rv==GWEN_DialogEvent_ResultReject)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
 }
 
 
 
-int Gtk3Gui_WListBox_Setup(GWEN_WIDGET *w)
+int Gtk4Gui_WListBox_Setup(GWEN_WIDGET *w)
 {
   GtkWidget *g;
   GtkWidget *gScroll;
@@ -522,17 +522,17 @@ int Gtk3Gui_WListBox_Setup(GWEN_WIDGET *w)
   G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_container_add(GTK_CONTAINER(gScroll), GTK_WIDGET(g));
 
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_REAL, (void *) gScroll);
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_CONTENT, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) gScroll);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 
-  GWEN_Widget_SetSetIntPropertyFn(w, Gtk3Gui_WListBox_SetIntProperty);
-  GWEN_Widget_SetGetIntPropertyFn(w, Gtk3Gui_WListBox_GetIntProperty);
-  GWEN_Widget_SetSetCharPropertyFn(w, Gtk3Gui_WListBox_SetCharProperty);
-  GWEN_Widget_SetGetCharPropertyFn(w, Gtk3Gui_WListBox_GetCharProperty);
+  GWEN_Widget_SetSetIntPropertyFn(w, Gtk4Gui_WListBox_SetIntProperty);
+  GWEN_Widget_SetGetIntPropertyFn(w, Gtk4Gui_WListBox_GetIntProperty);
+  GWEN_Widget_SetSetCharPropertyFn(w, Gtk4Gui_WListBox_SetCharProperty);
+  GWEN_Widget_SetGetCharPropertyFn(w, Gtk4Gui_WListBox_GetCharProperty);
 
   g_signal_connect(g,
                    "cursor-changed",
-                   G_CALLBACK(Gtk3Gui_WListBox_CursorChanged_handler),
+                   G_CALLBACK(Gtk4Gui_WListBox_CursorChanged_handler),
                    w);
 
   if (wParent)

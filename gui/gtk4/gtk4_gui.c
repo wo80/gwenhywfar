@@ -12,8 +12,8 @@
 #endif
 
 
-#include "gtk3_gui_p.h"
-#include "gtk3_gui_dialog_l.h"
+#include "gtk4_gui_p.h"
+#include "gtk4_gui_dialog_l.h"
 
 #include <assert.h>
 
@@ -31,58 +31,58 @@
 
 
 
-GWEN_INHERIT(GWEN_GUI, GTK3_GUI)
+GWEN_INHERIT(GWEN_GUI, GTK4_GUI)
 
 
 
-GWEN_GUI *Gtk3_Gui_new()
+GWEN_GUI *Gtk4_Gui_new()
 {
   GWEN_GUI *gui;
-  GTK3_GUI *xgui;
+  GTK4_GUI *xgui;
 
   gui=GWEN_Gui_new();
-  GWEN_NEW_OBJECT(GTK3_GUI, xgui);
-  GWEN_INHERIT_SETDATA(GWEN_GUI, GTK3_GUI, gui, xgui, Gtk3_Gui_FreeData);
+  GWEN_NEW_OBJECT(GTK4_GUI, xgui);
+  GWEN_INHERIT_SETDATA(GWEN_GUI, GTK4_GUI, gui, xgui, Gtk4_Gui_FreeData);
 
   GWEN_Gui_AddFlags(gui, GWEN_GUI_FLAGS_DIALOGSUPPORTED);
   GWEN_Gui_UseDialogs(gui);
-  xgui->execDialogFn=GWEN_Gui_SetExecDialogFn(gui, GTK3_Gui_ExecDialog);
-  xgui->openDialogFn=GWEN_Gui_SetOpenDialogFn(gui, GTK3_Gui_OpenDialog);
-  xgui->closeDialogFn=GWEN_Gui_SetCloseDialogFn(gui, GTK3_Gui_CloseDialog);
-  xgui->runDialogFn=GWEN_Gui_SetRunDialogFn(gui, GTK3_Gui_RunDialog);
-  xgui->getFileNameDialogFn=GWEN_Gui_SetGetFileNameFn(gui, GTK3_Gui_GetFileName);
+  xgui->execDialogFn=GWEN_Gui_SetExecDialogFn(gui, GTK4_Gui_ExecDialog);
+  xgui->openDialogFn=GWEN_Gui_SetOpenDialogFn(gui, GTK4_Gui_OpenDialog);
+  xgui->closeDialogFn=GWEN_Gui_SetCloseDialogFn(gui, GTK4_Gui_CloseDialog);
+  xgui->runDialogFn=GWEN_Gui_SetRunDialogFn(gui, GTK4_Gui_RunDialog);
+  xgui->getFileNameDialogFn=GWEN_Gui_SetGetFileNameFn(gui, GTK4_Gui_GetFileName);
 
   return gui;
 }
 
 
 
-GWENHYWFAR_CB void Gtk3_Gui_FreeData(GWEN_UNUSED void *bp, void *p)
+GWENHYWFAR_CB void Gtk4_Gui_FreeData(GWEN_UNUSED void *bp, void *p)
 {
-  GTK3_GUI *xgui;
+  GTK4_GUI *xgui;
 
-  xgui=(GTK3_GUI *) p;
+  xgui=(GTK4_GUI *) p;
 
   GWEN_FREE_OBJECT(xgui);
 }
 
 
 
-GWENHYWFAR_CB int GTK3_Gui_ExecDialog(GWEN_GUI *gui,
+GWENHYWFAR_CB int GTK4_Gui_ExecDialog(GWEN_GUI *gui,
                                       GWEN_DIALOG *dlg,
                                       uint32_t guiid)
 {
   int rv;
 
   assert(dlg);
-  rv=GTK3_Gui_OpenDialog(gui, dlg, guiid);
+  rv=GTK4_Gui_OpenDialog(gui, dlg, guiid);
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
     return rv;
   }
 
-  rv=GTK3_Gui_RunDialog(gui, dlg, 1);
-  GTK3_Gui_CloseDialog(gui, dlg);
+  rv=GTK4_Gui_RunDialog(gui, dlg, 1);
+  GTK4_Gui_CloseDialog(gui, dlg);
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
     return rv;
@@ -93,7 +93,7 @@ GWENHYWFAR_CB int GTK3_Gui_ExecDialog(GWEN_GUI *gui,
 
 
 
-GWENHYWFAR_CB int GTK3_Gui_OpenDialog(GWEN_UNUSED GWEN_GUI *gui,
+GWENHYWFAR_CB int GTK4_Gui_OpenDialog(GWEN_UNUSED GWEN_GUI *gui,
                                       GWEN_DIALOG *dlg,
                                       GWEN_UNUSED uint32_t guiid)
 {
@@ -101,25 +101,25 @@ GWENHYWFAR_CB int GTK3_Gui_OpenDialog(GWEN_UNUSED GWEN_GUI *gui,
   GtkWidget *g;
 
   assert(dlg);
-  Gtk3Gui_Dialog_Extend(dlg);
-  rv=Gtk3Gui_Dialog_Setup(dlg, NULL);
+  Gtk4Gui_Dialog_Extend(dlg);
+  rv=Gtk4Gui_Dialog_Setup(dlg, NULL);
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
-    Gtk3Gui_Dialog_Unextend(dlg);
+    Gtk4Gui_Dialog_Unextend(dlg);
     return rv;
   }
 
-  g=Gtk3Gui_Dialog_GetMainWidget(dlg);
+  g=Gtk4Gui_Dialog_GetMainWidget(dlg);
   if (g==NULL) {
     DBG_ERROR(GWEN_LOGDOMAIN, "No main widget");
-    Gtk3Gui_Dialog_Unextend(dlg);
+    Gtk4Gui_Dialog_Unextend(dlg);
     return GWEN_ERROR_INVALID;
   }
 
   rv=GWEN_Dialog_EmitSignalToAll(dlg, GWEN_DialogEvent_TypeInit, "");
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "Error initializing dialog: %d", rv);
-    Gtk3Gui_Dialog_Unextend(dlg);
+    Gtk4Gui_Dialog_Unextend(dlg);
     return rv;
   }
 
@@ -131,16 +131,16 @@ GWENHYWFAR_CB int GTK3_Gui_OpenDialog(GWEN_UNUSED GWEN_GUI *gui,
 
 
 
-GWENHYWFAR_CB int GTK3_Gui_CloseDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg)
+GWENHYWFAR_CB int GTK4_Gui_CloseDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg)
 {
   GtkWidget *g;
   int rv;
 
   assert(dlg);
-  g=Gtk3Gui_Dialog_GetMainWidget(dlg);
+  g=Gtk4Gui_Dialog_GetMainWidget(dlg);
   if (g==NULL) {
     DBG_ERROR(GWEN_LOGDOMAIN, "No main widget");
-    Gtk3Gui_Dialog_Unextend(dlg);
+    Gtk4Gui_Dialog_Unextend(dlg);
     return GWEN_ERROR_INVALID;
   }
 
@@ -151,22 +151,22 @@ GWENHYWFAR_CB int GTK3_Gui_CloseDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *d
   rv=GWEN_Dialog_EmitSignalToAll(dlg, GWEN_DialogEvent_TypeFini, "");
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "Error deinitializing dialog: %d", rv);
-    Gtk3Gui_Dialog_Unextend(dlg);
+    Gtk4Gui_Dialog_Unextend(dlg);
     return rv;
   }
 
-  Gtk3Gui_Dialog_Unextend(dlg);
+  Gtk4Gui_Dialog_Unextend(dlg);
   return 0;
 }
 
 
 
-GWENHYWFAR_CB int GTK3_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg, int untilEnd)
+GWENHYWFAR_CB int GTK4_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg, int untilEnd)
 {
   int rv;
 
   assert(dlg);
-  rv=GTK3_Gui_Dialog_Run(dlg, untilEnd);
+  rv=GTK4_Gui_Dialog_Run(dlg, untilEnd);
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
     return rv;
@@ -176,7 +176,7 @@ GWENHYWFAR_CB int GTK3_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg
 
 
 
-GWENHYWFAR_CB int GTK3_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
+GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        const char *caption,
                                        GWEN_GUI_FILENAME_TYPE fnt,
                                        GWEN_UNUSED uint32_t flags,

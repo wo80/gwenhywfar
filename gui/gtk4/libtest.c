@@ -10,7 +10,7 @@
 
 #include "config.h" /* for OS_WIN32 */
 
-#include "gtk3_gui.h"
+#include "gtk4_gui.h"
 #include "../testdialogs/dlg_test.h"
 #include "../testdialogs/dlg_test2.h"
 
@@ -44,7 +44,7 @@ int test1(int argc, char **argv)
   gtk_init(&argc, &argv);
 
   /* create GUI */
-  gui=Gtk3_Gui_new();
+  gui=Gtk4_Gui_new();
   GWEN_Gui_SetGui(gui);
 
   dlg=Dlg_Test1_new();
@@ -75,7 +75,7 @@ int test2(int argc, char **argv)
   setlocale(LC_ALL, "");
   gtk_init(&argc, &argv);
 
-  gui=Gtk3_Gui_new();
+  gui=Gtk4_Gui_new();
   GWEN_Gui_SetGui(gui);
 
   id1=GWEN_Gui_ProgressStart(GWEN_GUI_PROGRESS_SHOW_LOG |
@@ -144,7 +144,7 @@ int test3(int argc, char **argv)
   gtk_init(&argc, &argv);
 
   /* create GUI */
-  gui=Gtk3_Gui_new();
+  gui=Gtk4_Gui_new();
   GWEN_Gui_SetGui(gui);
 
   dlg=Dlg_Test2_new();

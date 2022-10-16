@@ -12,7 +12,7 @@
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WLineEdit_SetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WLineEdit_SetIntProperty(GWEN_WIDGET *w,
                                      GWEN_DIALOG_PROPERTY prop,
                                      GWEN_UNUSED int index,
                                      int value,
@@ -20,7 +20,7 @@ int Gtk3Gui_WLineEdit_SetIntProperty(GWEN_WIDGET *w,
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -51,14 +51,14 @@ int Gtk3Gui_WLineEdit_SetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WLineEdit_GetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WLineEdit_GetIntProperty(GWEN_WIDGET *w,
                                      GWEN_DIALOG_PROPERTY prop,
                                      GWEN_UNUSED int index,
                                      int defaultValue)
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -87,7 +87,7 @@ int Gtk3Gui_WLineEdit_GetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WLineEdit_SetCharProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WLineEdit_SetCharProperty(GWEN_WIDGET *w,
                                       GWEN_DIALOG_PROPERTY prop,
                                       GWEN_UNUSED int index,
                                       const char *value,
@@ -95,7 +95,7 @@ int Gtk3Gui_WLineEdit_SetCharProperty(GWEN_WIDGET *w,
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -116,14 +116,14 @@ int Gtk3Gui_WLineEdit_SetCharProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-const char *Gtk3Gui_WLineEdit_GetCharProperty(GWEN_WIDGET *w,
+const char *Gtk4Gui_WLineEdit_GetCharProperty(GWEN_WIDGET *w,
                                               GWEN_DIALOG_PROPERTY prop,
                                               GWEN_UNUSED int index,
                                               const char *defaultValue)
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -141,7 +141,7 @@ const char *Gtk3Gui_WLineEdit_GetCharProperty(GWEN_WIDGET *w,
 
 
 
-static void Gtk3Gui_WLineEdit_Deleted_text_handler(GWEN_UNUSED GtkEntryBuffer *entrybuffer,
+static void Gtk4Gui_WLineEdit_Deleted_text_handler(GWEN_UNUSED GtkEntryBuffer *entrybuffer,
                                                    GWEN_UNUSED guint arg1,
                                                    GWEN_UNUSED guint arg2,
                                                    gpointer data)
@@ -155,14 +155,14 @@ static void Gtk3Gui_WLineEdit_Deleted_text_handler(GWEN_UNUSED GtkEntryBuffer *e
                             GWEN_DialogEvent_TypeValueChanged,
                             GWEN_Widget_GetName(w));
   if (rv==GWEN_DialogEvent_ResultAccept)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
   else if (rv==GWEN_DialogEvent_ResultReject)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
 }
 
 
 
-static void Gtk3Gui_WLineEdit_Inserted_text_handler(GWEN_UNUSED GtkEntryBuffer *entrybuffer,
+static void Gtk4Gui_WLineEdit_Inserted_text_handler(GWEN_UNUSED GtkEntryBuffer *entrybuffer,
                                                     GWEN_UNUSED guint arg1,
                                                     GWEN_UNUSED gchar *arg2,
                                                     GWEN_UNUSED guint arg3,
@@ -177,14 +177,14 @@ static void Gtk3Gui_WLineEdit_Inserted_text_handler(GWEN_UNUSED GtkEntryBuffer *
                             GWEN_DialogEvent_TypeValueChanged,
                             GWEN_Widget_GetName(w));
   if (rv==GWEN_DialogEvent_ResultAccept)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
   else if (rv==GWEN_DialogEvent_ResultReject)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
 }
 
 
 
-int Gtk3Gui_WLineEdit_Setup(GWEN_WIDGET *w)
+int Gtk4Gui_WLineEdit_Setup(GWEN_WIDGET *w)
 {
   GtkWidget *g;
   const char *s;
@@ -203,22 +203,22 @@ int Gtk3Gui_WLineEdit_Setup(GWEN_WIDGET *w)
     gtk_entry_set_text(GTK_ENTRY(g), s);
   gtk_entry_set_visibility(GTK_ENTRY(g), text_is_visible);
 
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_REAL, (void *) g);
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_CONTENT, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 
-  GWEN_Widget_SetSetIntPropertyFn(w, Gtk3Gui_WLineEdit_SetIntProperty);
-  GWEN_Widget_SetGetIntPropertyFn(w, Gtk3Gui_WLineEdit_GetIntProperty);
-  GWEN_Widget_SetSetCharPropertyFn(w, Gtk3Gui_WLineEdit_SetCharProperty);
-  GWEN_Widget_SetGetCharPropertyFn(w, Gtk3Gui_WLineEdit_GetCharProperty);
+  GWEN_Widget_SetSetIntPropertyFn(w, Gtk4Gui_WLineEdit_SetIntProperty);
+  GWEN_Widget_SetGetIntPropertyFn(w, Gtk4Gui_WLineEdit_GetIntProperty);
+  GWEN_Widget_SetSetCharPropertyFn(w, Gtk4Gui_WLineEdit_SetCharProperty);
+  GWEN_Widget_SetGetCharPropertyFn(w, Gtk4Gui_WLineEdit_GetCharProperty);
 
   g_signal_connect(gtk_entry_get_buffer(GTK_ENTRY(g)),
                    "deleted-text",
-                   G_CALLBACK(Gtk3Gui_WLineEdit_Deleted_text_handler),
+                   G_CALLBACK(Gtk4Gui_WLineEdit_Deleted_text_handler),
                    w);
 
   g_signal_connect(gtk_entry_get_buffer(GTK_ENTRY(g)),
                    "inserted-text",
-                   G_CALLBACK(Gtk3Gui_WLineEdit_Inserted_text_handler),
+                   G_CALLBACK(Gtk4Gui_WLineEdit_Inserted_text_handler),
                    w);
 
   if (wParent)

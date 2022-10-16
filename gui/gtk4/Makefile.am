@@ -1,25 +1,25 @@
-AM_CPPFLAGS=-I$(gwenhywfar_symlinkdir) $(GTK3_CFLAGS) \
+AM_CPPFLAGS=-I$(gwenhywfar_symlinkdir) $(GTK4_CFLAGS) \
   @visibility_cflags@
-DEFS+=-DBUILDING_GTK3_GUI -DPACKAGE=\"$(PACKAGE)\"
+DEFS+=-DBUILDING_GTK4_GUI -DPACKAGE=\"$(PACKAGE)\"
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gwengui-gtk3.pc
+pkgconfig_DATA = gwengui-gtk4.pc
 
-lib_LTLIBRARIES=libgwengui-gtk3.la
+lib_LTLIBRARIES=libgwengui-gtk4.la
 
 
-libgwengui_gtk3_la_LIBADD=$(GTK3_LIBS) $(top_builddir)/src/$(gwenhywfar_internal_libname)
-libgwengui_gtk3_la_LDFLAGS = -no-undefined -version-info \
+libgwengui_gtk4_la_LIBADD=$(GTK4_LIBS) $(top_builddir)/src/$(gwenhywfar_internal_libname)
+libgwengui_gtk4_la_LDFLAGS = -no-undefined -version-info \
    $(GWENHYWFAR_SO_CURRENT):$(GWENHYWFAR_SO_REVISION):$(GWENHYWFAR_SO_AGE)
 
 noinst_HEADERS=\
-  gtk3_gui_p.h \
-  gtk3_gui_dialog_l.h \
-  gtk3_gui_dialog_p.h
+  gtk4_gui_p.h \
+  gtk4_gui_dialog_l.h \
+  gtk4_gui_dialog_p.h
 
-libgwengui_gtk3_la_SOURCES=\
-  gtk3_gui_dialog.c \
-  gtk3_gui.c
+libgwengui_gtk4_la_SOURCES=\
+  gtk4_gui_dialog.c \
+  gtk4_gui.c
 
 
 EXTRA_DIST=\
@@ -49,13 +49,13 @@ EXTRA_DIST=\
 
 
 
-iheaderdir=${gwenhywfar_headerdir_am}/gwen-gui-gtk3
+iheaderdir=${gwenhywfar_headerdir_am}/gwen-gui-gtk4
 iheader_HEADERS= \
-  gtk3_gui.h
+  gtk4_gui.h
 
 
 noinst_PROGRAMS = libtest
 libtest_SOURCES = libtest.c
-libtest_LDADD = libgwengui-gtk3.la $(GTK3_LIBS) $(top_builddir)/src/$(gwenhywfar_internal_libname) \
+libtest_LDADD = libgwengui-gtk4.la $(GTK4_LIBS) $(top_builddir)/src/$(gwenhywfar_internal_libname) \
   $(builddir)/../testdialogs/libgwengui-test.la
 

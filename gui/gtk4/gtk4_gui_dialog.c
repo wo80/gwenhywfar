@@ -12,7 +12,7 @@
 #endif
 
 
-#include "gtk3_gui_dialog_p.h"
+#include "gtk4_gui_dialog_p.h"
 #include <assert.h>
 
 #include <gwenhywfar/inherit.h>
@@ -31,12 +31,12 @@
 #define I18N(msg) GWEN_I18N_Translate(PACKAGE, msg)
 
 
-#define GTK3_DIALOG_WIDGET_REAL    0
-#define GTK3_DIALOG_WIDGET_CONTENT 1
-#define GTK3_DIALOG_WIDGET_DATA    2
+#define GTK4_DIALOG_WIDGET_REAL    0
+#define GTK4_DIALOG_WIDGET_CONTENT 1
+#define GTK4_DIALOG_WIDGET_DATA    2
 
-#define GTK3_DIALOG_STRING_TITLE  0
-#define GTK3_DIALOG_STRING_VALUE  1
+#define GTK4_DIALOG_STRING_TITLE  0
+#define GTK4_DIALOG_STRING_VALUE  1
 
 
 #include "w_combobox.c"
@@ -65,34 +65,34 @@
 
 
 
-GWEN_INHERIT(GWEN_DIALOG, GTK3_GUI_DIALOG)
+GWEN_INHERIT(GWEN_DIALOG, GTK4_GUI_DIALOG)
 
 
 
 
-void Gtk3Gui_Dialog_Extend(GWEN_DIALOG *dlg)
+void Gtk4Gui_Dialog_Extend(GWEN_DIALOG *dlg)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
-  GWEN_NEW_OBJECT(GTK3_GUI_DIALOG, xdlg);
-  GWEN_INHERIT_SETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg, xdlg, Gtk3Gui_Dialog_FreeData);
+  GWEN_NEW_OBJECT(GTK4_GUI_DIALOG, xdlg);
+  GWEN_INHERIT_SETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg, xdlg, Gtk4Gui_Dialog_FreeData);
 
   /* set virtual functions */
-  xdlg->setIntPropertyFn=GWEN_Dialog_SetSetIntPropertyFn(dlg, Gtk3Gui_Dialog_SetIntProperty);
-  xdlg->getIntPropertyFn=GWEN_Dialog_SetGetIntPropertyFn(dlg, Gtk3Gui_Dialog_GetIntProperty);
-  xdlg->setCharPropertyFn=GWEN_Dialog_SetSetCharPropertyFn(dlg, Gtk3Gui_Dialog_SetCharProperty);
-  xdlg->getCharPropertyFn=GWEN_Dialog_SetGetCharPropertyFn(dlg, Gtk3Gui_Dialog_GetCharProperty);
+  xdlg->setIntPropertyFn=GWEN_Dialog_SetSetIntPropertyFn(dlg, Gtk4Gui_Dialog_SetIntProperty);
+  xdlg->getIntPropertyFn=GWEN_Dialog_SetGetIntPropertyFn(dlg, Gtk4Gui_Dialog_GetIntProperty);
+  xdlg->setCharPropertyFn=GWEN_Dialog_SetSetCharPropertyFn(dlg, Gtk4Gui_Dialog_SetCharProperty);
+  xdlg->getCharPropertyFn=GWEN_Dialog_SetGetCharPropertyFn(dlg, Gtk4Gui_Dialog_GetCharProperty);
 
 }
 
 
 
-void Gtk3Gui_Dialog_Unextend(GWEN_DIALOG *dlg)
+void Gtk4Gui_Dialog_Unextend(GWEN_DIALOG *dlg)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
   /* reset virtual functions */
@@ -101,16 +101,16 @@ void Gtk3Gui_Dialog_Unextend(GWEN_DIALOG *dlg)
   GWEN_Dialog_SetSetCharPropertyFn(dlg, xdlg->setCharPropertyFn);
   GWEN_Dialog_SetGetCharPropertyFn(dlg, xdlg->getCharPropertyFn);
 
-  GWEN_INHERIT_UNLINK(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  GWEN_INHERIT_UNLINK(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
 }
 
 
 
-void GWENHYWFAR_CB Gtk3Gui_Dialog_FreeData(GWEN_UNUSED void *bp, void *p)
+void GWENHYWFAR_CB Gtk4Gui_Dialog_FreeData(GWEN_UNUSED void *bp, void *p)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
-  xdlg=(GTK3_GUI_DIALOG *) p;
+  xdlg=(GTK4_GUI_DIALOG *) p;
 
   if (xdlg->mainWidget)
     gtk_widget_destroy(xdlg->mainWidget);
@@ -120,12 +120,12 @@ void GWENHYWFAR_CB Gtk3Gui_Dialog_FreeData(GWEN_UNUSED void *bp, void *p)
 
 
 
-GtkWidget *Gtk3Gui_Dialog_GetMainWidget(const GWEN_DIALOG *dlg)
+GtkWidget *Gtk4Gui_Dialog_GetMainWidget(const GWEN_DIALOG *dlg)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
   return xdlg->mainWidget;
@@ -133,7 +133,7 @@ GtkWidget *Gtk3Gui_Dialog_GetMainWidget(const GWEN_DIALOG *dlg)
 
 
 
-GWENHYWFAR_CB int Gtk3Gui_Dialog_SetIntProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
+GWENHYWFAR_CB int Gtk4Gui_Dialog_SetIntProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
                                                 GWEN_WIDGET *w,
                                                 GWEN_DIALOG_PROPERTY prop,
                                                 int index,
@@ -145,7 +145,7 @@ GWENHYWFAR_CB int Gtk3Gui_Dialog_SetIntProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
 
 
 
-GWENHYWFAR_CB int Gtk3Gui_Dialog_GetIntProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
+GWENHYWFAR_CB int Gtk4Gui_Dialog_GetIntProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
                                                 GWEN_WIDGET *w,
                                                 GWEN_DIALOG_PROPERTY prop,
                                                 int index,
@@ -156,7 +156,7 @@ GWENHYWFAR_CB int Gtk3Gui_Dialog_GetIntProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
 
 
 
-GWENHYWFAR_CB int Gtk3Gui_Dialog_SetCharProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
+GWENHYWFAR_CB int Gtk4Gui_Dialog_SetCharProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
                                                  GWEN_WIDGET *w,
                                                  GWEN_DIALOG_PROPERTY prop,
                                                  int index,
@@ -168,7 +168,7 @@ GWENHYWFAR_CB int Gtk3Gui_Dialog_SetCharProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
 
 
 
-GWENHYWFAR_CB const char *Gtk3Gui_Dialog_GetCharProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
+GWENHYWFAR_CB const char *Gtk4Gui_Dialog_GetCharProperty(GWEN_UNUSED GWEN_DIALOG *dlg,
                                                          GWEN_WIDGET *w,
                                                          GWEN_DIALOG_PROPERTY prop,
                                                          int index,
@@ -179,9 +179,9 @@ GWENHYWFAR_CB const char *Gtk3Gui_Dialog_GetCharProperty(GWEN_UNUSED GWEN_DIALOG
 
 
 
-int Gtk3Gui_Dialog_Setup(GWEN_DIALOG *dlg, GWEN_UNUSED GtkWidget *parentWindow)
+int Gtk4Gui_Dialog_Setup(GWEN_DIALOG *dlg, GWEN_UNUSED GtkWidget *parentWindow)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
   GWEN_WIDGET_TREE *wtree;
   GWEN_WIDGET *w;
   GtkWindow *gw;
@@ -189,7 +189,7 @@ int Gtk3Gui_Dialog_Setup(GWEN_DIALOG *dlg, GWEN_UNUSED GtkWidget *parentWindow)
   GList *tll;
 
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
   wtree=GWEN_Dialog_GetWidgets(dlg);
@@ -203,13 +203,13 @@ int Gtk3Gui_Dialog_Setup(GWEN_DIALOG *dlg, GWEN_UNUSED GtkWidget *parentWindow)
     return GWEN_ERROR_NOT_FOUND;
   }
 
-  rv=Gtk3Gui_Dialog_SetupTree(w);
+  rv=Gtk4Gui_Dialog_SetupTree(w);
   if (rv<0) {
     DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
     return rv;
   }
 
-  gw=GTK_WINDOW(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  gw=GTK_WINDOW(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   gtk_window_set_type_hint(GTK_WINDOW(gw), GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_window_set_position(GTK_WINDOW(gw), GTK_WIN_POS_CENTER_ON_PARENT);
   /*gtk_window_set_keep_above(GTK_WINDOW(gw), TRUE);*/
@@ -244,9 +244,9 @@ int Gtk3Gui_Dialog_Setup(GWEN_DIALOG *dlg, GWEN_UNUSED GtkWidget *parentWindow)
 
 
 
-void Gtk3Gui_Dialog_Leave(GWEN_DIALOG *dlg, int result)
+void Gtk4Gui_Dialog_Leave(GWEN_DIALOG *dlg, int result)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
   GWEN_DIALOG *parent;
 
   /* get toplevel dialog, the one which actually is the GUI dialog */
@@ -254,7 +254,7 @@ void Gtk3Gui_Dialog_Leave(GWEN_DIALOG *dlg, int result)
     dlg=parent;
 
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
   xdlg->response=result;
@@ -267,14 +267,14 @@ void Gtk3Gui_Dialog_Leave(GWEN_DIALOG *dlg, int result)
 static void run_unmap_handler(GWEN_UNUSED GtkWindow *window, gpointer data)
 {
   GWEN_DIALOG *dlg;
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
   dlg=data;
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
-  Gtk3Gui_Dialog_Leave(dlg, 0);
+  Gtk4Gui_Dialog_Leave(dlg, 0);
 }
 
 
@@ -284,14 +284,14 @@ static gint run_delete_handler(GWEN_UNUSED GtkWindow *window,
                                gpointer data)
 {
   GWEN_DIALOG *dlg;
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
   dlg=data;
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
-  Gtk3Gui_Dialog_Leave(dlg, 0);
+  Gtk4Gui_Dialog_Leave(dlg, 0);
   return TRUE; /* Do not destroy */
 }
 
@@ -300,11 +300,11 @@ static gint run_delete_handler(GWEN_UNUSED GtkWindow *window,
 static void run_destroy_handler(GWEN_UNUSED GtkWindow *window, gpointer data)
 {
   GWEN_DIALOG *dlg;
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
 
   dlg=data;
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
   xdlg->destroyed=1;
@@ -312,19 +312,19 @@ static void run_destroy_handler(GWEN_UNUSED GtkWindow *window, gpointer data)
 
 
 
-int GTK3_Gui_Dialog_Run(GWEN_DIALOG *dlg, int untilEnd)
+int GTK4_Gui_Dialog_Run(GWEN_DIALOG *dlg, int untilEnd)
 {
-  GTK3_GUI_DIALOG *xdlg;
+  GTK4_GUI_DIALOG *xdlg;
   GtkWidget *g;
 
   assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK3_GUI_DIALOG, dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
   assert(xdlg);
 
-  g=Gtk3Gui_Dialog_GetMainWidget(dlg);
+  g=Gtk4Gui_Dialog_GetMainWidget(dlg);
   if (g==NULL) {
     DBG_ERROR(GWEN_LOGDOMAIN, "No main widget");
-    Gtk3Gui_Dialog_Unextend(dlg);
+    Gtk4Gui_Dialog_Unextend(dlg);
     return GWEN_ERROR_INVALID;
   }
 
@@ -369,84 +369,84 @@ int GTK3_Gui_Dialog_Run(GWEN_DIALOG *dlg, int untilEnd)
 
 
 
-int Gtk3Gui_Dialog_SetupTree(GWEN_WIDGET *w)
+int Gtk4Gui_Dialog_SetupTree(GWEN_WIDGET *w)
 {
   int rv;
 
   switch (GWEN_Widget_GetType(w)) {
   case GWEN_Widget_TypeDialog:
-    rv=Gtk3Gui_WDialog_Setup(w);
+    rv=Gtk4Gui_WDialog_Setup(w);
     break;
   case GWEN_Widget_TypeLabel:
-    rv=Gtk3Gui_WLabel_Setup(w);
+    rv=Gtk4Gui_WLabel_Setup(w);
     break;
   case GWEN_Widget_TypeGridLayout:
-    rv=Gtk3Gui_WGridLayout_Setup(w);
+    rv=Gtk4Gui_WGridLayout_Setup(w);
     break;
   case GWEN_Widget_TypeVLayout:
-    rv=Gtk3Gui_WVLayout_Setup(w);
+    rv=Gtk4Gui_WVLayout_Setup(w);
     break;
   case GWEN_Widget_TypeHLayout:
-    rv=Gtk3Gui_WHLayout_Setup(w);
+    rv=Gtk4Gui_WHLayout_Setup(w);
     break;
   case GWEN_Widget_TypePushButton:
-    rv=Gtk3Gui_WPushButton_Setup(w);
+    rv=Gtk4Gui_WPushButton_Setup(w);
     break;
   case GWEN_Widget_TypeLineEdit:
-    rv=Gtk3Gui_WLineEdit_Setup(w);
+    rv=Gtk4Gui_WLineEdit_Setup(w);
     break;
   case GWEN_Widget_TypeHLine:
-    rv=Gtk3Gui_WHLine_Setup(w);
+    rv=Gtk4Gui_WHLine_Setup(w);
     break;
   case GWEN_Widget_TypeVLine:
-    rv=Gtk3Gui_WVLine_Setup(w);
+    rv=Gtk4Gui_WVLine_Setup(w);
     break;
   case GWEN_Widget_TypeVSpacer:
-    rv=Gtk3Gui_WVSpacer_Setup(w);
+    rv=Gtk4Gui_WVSpacer_Setup(w);
     break;
   case GWEN_Widget_TypeHSpacer:
-    rv=Gtk3Gui_WHSpacer_Setup(w);
+    rv=Gtk4Gui_WHSpacer_Setup(w);
     break;
   case GWEN_Widget_TypeComboBox:
-    rv=Gtk3Gui_WComboBox_Setup(w);
+    rv=Gtk4Gui_WComboBox_Setup(w);
     break;
   case GWEN_Widget_TypeTextEdit:
-    rv=Gtk3Gui_WTextEdit_Setup(w);
+    rv=Gtk4Gui_WTextEdit_Setup(w);
     break;
   case GWEN_Widget_TypeWidgetStack:
-    rv=Gtk3Gui_WStack_Setup(w);
+    rv=Gtk4Gui_WStack_Setup(w);
     break;
   case GWEN_Widget_TypeTabBook:
-    rv=Gtk3Gui_WTabBook_Setup(w);
+    rv=Gtk4Gui_WTabBook_Setup(w);
     break;
   case GWEN_Widget_TypeTabPage:
     /* just re-use vbox */
     GWEN_Widget_AddFlags(w, GWEN_WIDGET_FLAGS_FILLX | GWEN_WIDGET_FLAGS_FILLY);
-    rv=Gtk3Gui_WVLayout_Setup(w);
+    rv=Gtk4Gui_WVLayout_Setup(w);
     break;
   case GWEN_Widget_TypeGroupBox:
-    rv=Gtk3Gui_WGroupBox_Setup(w);
+    rv=Gtk4Gui_WGroupBox_Setup(w);
     break;
   case GWEN_Widget_TypeTextBrowser:
-    rv=Gtk3Gui_WTextBrowser_Setup(w);
+    rv=Gtk4Gui_WTextBrowser_Setup(w);
     break;
   case GWEN_Widget_TypeProgressBar:
-    rv=Gtk3Gui_WProgressBar_Setup(w);
+    rv=Gtk4Gui_WProgressBar_Setup(w);
     break;
   case GWEN_Widget_TypeSpinBox:
-    rv=Gtk3Gui_WSpinBox_Setup(w);
+    rv=Gtk4Gui_WSpinBox_Setup(w);
     break;
   case GWEN_Widget_TypeListBox:
-    rv=Gtk3Gui_WListBox_Setup(w);
+    rv=Gtk4Gui_WListBox_Setup(w);
     break;
   case GWEN_Widget_TypeCheckBox:
-    rv=Gtk3Gui_WCheckBox_Setup(w);
+    rv=Gtk4Gui_WCheckBox_Setup(w);
     break;
   case GWEN_Widget_TypeScrollArea:
-    rv=Gtk3Gui_WScrollArea_Setup(w);
+    rv=Gtk4Gui_WScrollArea_Setup(w);
     break;
   case GWEN_Widget_TypeRadioButton:
-    rv=Gtk3Gui_WRadioButton_Setup(w);
+    rv=Gtk4Gui_WRadioButton_Setup(w);
     break;
   default:
     DBG_ERROR(GWEN_LOGDOMAIN, "Unhandled widget type %d", GWEN_Widget_GetType(w));
@@ -465,7 +465,7 @@ int Gtk3Gui_Dialog_SetupTree(GWEN_WIDGET *w)
     wChild=GWEN_Widget_Tree_GetFirstChild(w);
     while (wChild) {
       /* recursion */
-      rv=Gtk3Gui_Dialog_SetupTree(wChild);
+      rv=Gtk4Gui_Dialog_SetupTree(wChild);
       if (rv<0) {
         DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
         return rv;
@@ -480,7 +480,7 @@ int Gtk3Gui_Dialog_SetupTree(GWEN_WIDGET *w)
 
 
 
-int Gtk3Gui_GetRawText(const char *text, GWEN_BUFFER *tbuf)
+int Gtk4Gui_GetRawText(const char *text, GWEN_BUFFER *tbuf)
 {
   const char *p=0;
   const char *p2=0;
