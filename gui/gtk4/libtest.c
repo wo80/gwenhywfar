@@ -41,7 +41,7 @@ int test1(int argc, char **argv)
   GWEN_Logger_SetLevel(0, GWEN_LoggerLevel_Info);
 
   setlocale(LC_ALL, "");
-  gtk_init(&argc, &argv);
+  gtk_init();
 
   /* create GUI */
   gui=Gtk4_Gui_new();
@@ -73,7 +73,7 @@ int test2(int argc, char **argv)
   GWEN_GUI *gui;
 
   setlocale(LC_ALL, "");
-  gtk_init(&argc, &argv);
+  gtk_init();
 
   gui=Gtk4_Gui_new();
   GWEN_Gui_SetGui(gui);
@@ -141,7 +141,7 @@ int test3(int argc, char **argv)
   GWEN_Logger_SetLevel(0, GWEN_LoggerLevel_Info);
 
   setlocale(LC_ALL, "");
-  gtk_init(&argc, &argv);
+  gtk_init();
 
   /* create GUI */
   gui=Gtk4_Gui_new();
