@@ -12,7 +12,7 @@
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WHLine_SetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WHLine_SetIntProperty(GWEN_WIDGET *w,
                                   GWEN_DIALOG_PROPERTY prop,
                                   GWEN_UNUSED int index,
                                   int value,
@@ -20,7 +20,7 @@ int Gtk3Gui_WHLine_SetIntProperty(GWEN_WIDGET *w,
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -46,14 +46,14 @@ int Gtk3Gui_WHLine_SetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WHLine_GetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WHLine_GetIntProperty(GWEN_WIDGET *w,
                                   GWEN_DIALOG_PROPERTY prop,
                                   GWEN_UNUSED int index,
                                   int defaultValue)
 {
   GtkWidget *g;
 
-  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_WIDGET(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -76,7 +76,7 @@ int Gtk3Gui_WHLine_GetIntProperty(GWEN_WIDGET *w,
 
 
 
-int Gtk3Gui_WHLine_Setup(GWEN_WIDGET *w)
+int Gtk4Gui_WHLine_Setup(GWEN_WIDGET *w)
 {
   GtkWidget *g;
   GWEN_WIDGET *wParent;
@@ -84,11 +84,11 @@ int Gtk3Gui_WHLine_Setup(GWEN_WIDGET *w)
   wParent=GWEN_Widget_Tree_GetParent(w);
 
   g=gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_REAL, (void *) g);
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_CONTENT, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 
-  GWEN_Widget_SetSetIntPropertyFn(w, Gtk3Gui_WHLine_SetIntProperty);
-  GWEN_Widget_SetGetIntPropertyFn(w, Gtk3Gui_WHLine_GetIntProperty);
+  GWEN_Widget_SetSetIntPropertyFn(w, Gtk4Gui_WHLine_SetIntProperty);
+  GWEN_Widget_SetGetIntPropertyFn(w, Gtk4Gui_WHLine_GetIntProperty);
 
   if (wParent)
     GWEN_Widget_AddChildGuiWidget(wParent, w);

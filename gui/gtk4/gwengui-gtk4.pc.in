@@ -1,4 +1,4 @@
-# pkg-config configuration for gwengui_gtk3
+# pkg-config configuration for gwengui_gtk4
 # For information about the syntax, see pkg-config(1)
 
 # General installation directories
@@ -13,11 +13,11 @@ bindir=@bindir@
 sysconfdir=@sysconfdir@
 
 # Human-readable name
-Name: gwengui-gtk3
+Name: gwengui-gtk4
 # Human-readable description
-Description: GTK3 Implementation of the GWEN_DIALOG framework.
+Description: GTK4 Implementation of the GWEN_DIALOG framework.
 
 Version: @VERSION@
-Libs: -L@libdir@ -lgwengui-gtk3
+Libs: -L@libdir@ -lgwengui-gtk4
 Cflags: -I@includedir@
 

@@ -7,18 +7,18 @@
  *          Please see toplevel file COPYING for license details           *
  ***************************************************************************/
 
-#ifndef GTK3_GUI_P_H
-#define GTK3_GUI_P_H
+#ifndef GTK4_GUI_P_H
+#define GTK4_GUI_P_H
 
 
-#include "gtk3_gui.h"
+#include "gtk4_gui.h"
 
 #include <gwenhywfar/gui_be.h>
 
 
 
-typedef struct GTK3_GUI GTK3_GUI;
-struct GTK3_GUI {
+typedef struct GTK4_GUI GTK4_GUI;
+struct GTK4_GUI {
 
   GWEN_GUI_EXEC_DIALOG_FN execDialogFn;
 
@@ -29,28 +29,28 @@ struct GTK3_GUI {
 };
 
 static GWENHYWFAR_CB
-void Gtk3_Gui_FreeData(void *bp, void *p);
+void Gtk4_Gui_FreeData(void *bp, void *p);
 
 
 static GWENHYWFAR_CB
-int GTK3_Gui_ExecDialog(GWEN_GUI *gui,
+int GTK4_Gui_ExecDialog(GWEN_GUI *gui,
                         GWEN_DIALOG *dlg,
                         uint32_t guiid);
 
 
 static GWENHYWFAR_CB
-int GTK3_Gui_OpenDialog(GWEN_GUI *gui,
+int GTK4_Gui_OpenDialog(GWEN_GUI *gui,
                         GWEN_DIALOG *dlg,
                         uint32_t guiid);
 
 static GWENHYWFAR_CB
-int GTK3_Gui_CloseDialog(GWEN_GUI *gui, GWEN_DIALOG *dlg);
+int GTK4_Gui_CloseDialog(GWEN_GUI *gui, GWEN_DIALOG *dlg);
 
 static GWENHYWFAR_CB
-int GTK3_Gui_RunDialog(GWEN_GUI *gui, GWEN_DIALOG *dlg, int timeout);
+int GTK4_Gui_RunDialog(GWEN_GUI *gui, GWEN_DIALOG *dlg, int timeout);
 
 static GWENHYWFAR_CB
-int GTK3_Gui_GetFileName(GWEN_GUI *gui,
+int GTK4_Gui_GetFileName(GWEN_GUI *gui,
                          const char *caption,
                          GWEN_GUI_FILENAME_TYPE fnt,
                          uint32_t flags,

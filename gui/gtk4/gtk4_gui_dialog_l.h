@@ -7,11 +7,11 @@
  *          Please see toplevel file COPYING for license details           *
  ***************************************************************************/
 
-#ifndef GTK3_GUI_DIALOG_L_H
-#define GTK3_GUI_DIALOG_L_H
+#ifndef GTK4_GUI_DIALOG_L_H
+#define GTK4_GUI_DIALOG_L_H
 
 
-#include <gwen-gui-gtk3/gtk3_gui.h>
+#include <gwen-gui-gtk4/gtk4_gui.h>
 
 
 #include <gtk/gtk.h>
@@ -19,7 +19,7 @@
 #include <gwenhywfar/dialog_be.h>
 
 
-#define GTK3_GUI_DIALOG_DEFAULT_BOX_SPACING 3
+#define GTK4_GUI_DIALOG_DEFAULT_BOX_SPACING 3
 
 
 typedef struct {
@@ -32,19 +32,19 @@ typedef struct {
 
 
 
-void Gtk3Gui_Dialog_Extend(GWEN_DIALOG *dlg);
-void Gtk3Gui_Dialog_Unextend(GWEN_DIALOG *dlg);
+void Gtk4Gui_Dialog_Extend(GWEN_DIALOG *dlg);
+void Gtk4Gui_Dialog_Unextend(GWEN_DIALOG *dlg);
 
-int Gtk3Gui_Dialog_Setup(GWEN_DIALOG *dlg, GtkWidget *parentWindow);
-
-
-GtkWidget *Gtk3Gui_Dialog_GetMainWidget(const GWEN_DIALOG *dlg);
+int Gtk4Gui_Dialog_Setup(GWEN_DIALOG *dlg, GtkWidget *parentWindow);
 
 
-int GTK3_Gui_Dialog_Run(GWEN_DIALOG *dlg, int timeout);
-void Gtk3Gui_Dialog_Leave(GWEN_DIALOG *dlg, int result);
+GtkWidget *Gtk4Gui_Dialog_GetMainWidget(const GWEN_DIALOG *dlg);
 
-int Gtk3Gui_GetRawText(const char *text, GWEN_BUFFER *tbuf);
+
+int GTK4_Gui_Dialog_Run(GWEN_DIALOG *dlg, int timeout);
+void Gtk4Gui_Dialog_Leave(GWEN_DIALOG *dlg, int result);
+
+int Gtk4Gui_GetRawText(const char *text, GWEN_BUFFER *tbuf);
 
 #endif
 

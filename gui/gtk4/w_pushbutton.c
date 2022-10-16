@@ -12,7 +12,7 @@
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WPushButton_SetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WPushButton_SetIntProperty(GWEN_WIDGET *w,
                                        GWEN_DIALOG_PROPERTY prop,
                                        GWEN_UNUSED int index,
                                        int value,
@@ -20,7 +20,7 @@ int Gtk3Gui_WPushButton_SetIntProperty(GWEN_WIDGET *w,
 {
   GtkButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -51,14 +51,14 @@ int Gtk3Gui_WPushButton_SetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WPushButton_GetIntProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WPushButton_GetIntProperty(GWEN_WIDGET *w,
                                        GWEN_DIALOG_PROPERTY prop,
                                        GWEN_UNUSED int index,
                                        int defaultValue)
 {
   GtkButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -87,7 +87,7 @@ int Gtk3Gui_WPushButton_GetIntProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-int Gtk3Gui_WPushButton_SetCharProperty(GWEN_WIDGET *w,
+int Gtk4Gui_WPushButton_SetCharProperty(GWEN_WIDGET *w,
                                         GWEN_DIALOG_PROPERTY prop,
                                         GWEN_UNUSED int index,
                                         const char *value,
@@ -95,7 +95,7 @@ int Gtk3Gui_WPushButton_SetCharProperty(GWEN_WIDGET *w,
 {
   GtkButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -115,14 +115,14 @@ int Gtk3Gui_WPushButton_SetCharProperty(GWEN_WIDGET *w,
 
 
 static GWENHYWFAR_CB
-const char *Gtk3Gui_WPushButton_GetCharProperty(GWEN_WIDGET *w,
+const char *Gtk4Gui_WPushButton_GetCharProperty(GWEN_WIDGET *w,
                                                 GWEN_DIALOG_PROPERTY prop,
                                                 GWEN_UNUSED int index,
                                                 const char *defaultValue)
 {
   GtkButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK3_DIALOG_WIDGET_REAL));
+  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -140,7 +140,7 @@ const char *Gtk3Gui_WPushButton_GetCharProperty(GWEN_WIDGET *w,
 
 
 
-static void Gtk3Gui_WPushButton_Clicked_handler(GWEN_UNUSED GtkButton *button, gpointer data)
+static void Gtk4Gui_WPushButton_Clicked_handler(GWEN_UNUSED GtkButton *button, gpointer data)
 {
   GWEN_WIDGET *w;
   int rv;
@@ -151,14 +151,14 @@ static void Gtk3Gui_WPushButton_Clicked_handler(GWEN_UNUSED GtkButton *button, g
                             GWEN_DialogEvent_TypeActivated,
                             GWEN_Widget_GetName(w));
   if (rv==GWEN_DialogEvent_ResultAccept)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
   else if (rv==GWEN_DialogEvent_ResultReject)
-    Gtk3Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
+    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
 }
 
 
 
-int Gtk3Gui_WPushButton_Setup(GWEN_WIDGET *w)
+int Gtk4Gui_WPushButton_Setup(GWEN_WIDGET *w)
 {
   GtkWidget *g;
   const char *s;
@@ -199,17 +199,17 @@ int Gtk3Gui_WPushButton_Setup(GWEN_WIDGET *w)
     }
   }
 
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_REAL, (void *) g);
-  GWEN_Widget_SetImplData(w, GTK3_DIALOG_WIDGET_CONTENT, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
+  GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 
-  GWEN_Widget_SetSetIntPropertyFn(w, Gtk3Gui_WPushButton_SetIntProperty);
-  GWEN_Widget_SetGetIntPropertyFn(w, Gtk3Gui_WPushButton_GetIntProperty);
-  GWEN_Widget_SetSetCharPropertyFn(w, Gtk3Gui_WPushButton_SetCharProperty);
-  GWEN_Widget_SetGetCharPropertyFn(w, Gtk3Gui_WPushButton_GetCharProperty);
+  GWEN_Widget_SetSetIntPropertyFn(w, Gtk4Gui_WPushButton_SetIntProperty);
+  GWEN_Widget_SetGetIntPropertyFn(w, Gtk4Gui_WPushButton_GetIntProperty);
+  GWEN_Widget_SetSetCharPropertyFn(w, Gtk4Gui_WPushButton_SetCharProperty);
+  GWEN_Widget_SetGetCharPropertyFn(w, Gtk4Gui_WPushButton_GetCharProperty);
 
   g_signal_connect(g,
                    "clicked",
-                   G_CALLBACK(Gtk3Gui_WPushButton_Clicked_handler),
+                   G_CALLBACK(Gtk4Gui_WPushButton_Clicked_handler),
                    w);
 
   if (wParent)
