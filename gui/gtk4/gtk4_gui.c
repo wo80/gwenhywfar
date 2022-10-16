@@ -124,7 +124,7 @@ GWENHYWFAR_CB int GTK4_Gui_OpenDialog(GWEN_UNUSED GWEN_GUI *gui,
   }
 
   /* show dialog */
-  gtk_widget_show_all(g);
+  gtk_widget_show(g);
 
   return 0;
 }
@@ -174,7 +174,33 @@ GWENHYWFAR_CB int GTK4_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg
   return rv;
 }
 
+  /*
+     Opening file dialogs blocking the UI thread is no longer possible in GTK4, see
+     https://docs.gtk.org/gtk4/migrating-3to4.html#stop-using-blocking-dialog-functions
 
+     IMPORTANT: need to fix this. Currently not possible with Gwen GUI design?
+  */
+
+static void
+on_file_chooser_response (GtkDialog *dialog,
+                                 int        response)
+{
+  if (response == GTK_RESPONSE_ACCEPT)
+  {
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+
+    g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
+
+    /*
+    filename = g_file_get_path(file);
+    GWEN_Buffer_Reset(pathBuffer);
+    GWEN_Buffer_AppendString(pathBuffer, filename);
+    g_free(filename);
+    */
+  }
+
+  gtk_window_destroy (GTK_WINDOW (dialog));
+}
 
 GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        const char *caption,
@@ -198,103 +224,53 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
     }
   }
 
+  GtkWidget *dialog;
+  GtkFileChooserAction action;
+
   switch (fnt) {
   case GWEN_Gui_FileNameType_OpenFileName: {
-    GtkWidget *dialog;
-
+    action = GTK_FILE_CHOOSER_ACTION_OPEN;
     if (!(caption && *caption))
       caption=I18N("Open File");
-    dialog=gtk_file_chooser_dialog_new(caption,
-                                       NULL,
-                                       GTK_FILE_CHOOSER_ACTION_OPEN,
-                                       "_Cancel", GTK_RESPONSE_CANCEL,
-                                       "_Open", GTK_RESPONSE_ACCEPT,
-                                       NULL);
-    if (folder && *folder)
-      gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), folder);
-    if (fileName && *fileName)
-      gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName);
-
-    if (gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_ACCEPT) {
-      char *filename;
-
-      filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-      GWEN_Buffer_Reset(pathBuffer);
-      GWEN_Buffer_AppendString(pathBuffer, filename);
-      g_free(filename);
-      gtk_widget_destroy(dialog);
-      free(folder);
-      return 0;
-    }
-    gtk_widget_destroy(dialog);
-    free(folder);
-    return GWEN_ERROR_USER_ABORTED;
   }
 
   case GWEN_Gui_FileNameType_SaveFileName: {
-    GtkWidget *dialog;
-
+    action = GTK_FILE_CHOOSER_ACTION_SAVE;
     if (!(caption && *caption))
       caption=I18N("Save File");
-    dialog=gtk_file_chooser_dialog_new(caption,
-                                       NULL,
-                                       GTK_FILE_CHOOSER_ACTION_SAVE,
-                                       "_Cancel", GTK_RESPONSE_CANCEL,
-                                       "_Open", GTK_RESPONSE_ACCEPT,
-                                       NULL);
-    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
-    if (folder && *folder)
-      gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), folder);
-    if (fileName && *fileName)
-      gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName);
-
-    if (gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_ACCEPT) {
-      char *filename;
-
-      filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-      GWEN_Buffer_Reset(pathBuffer);
-      GWEN_Buffer_AppendString(pathBuffer, filename);
-      g_free(filename);
-      gtk_widget_destroy(dialog);
-      free(folder);
-      return 0;
-    }
-    gtk_widget_destroy(dialog);
-    free(folder);
-    return GWEN_ERROR_USER_ABORTED;
   }
 
   case GWEN_Gui_FileNameType_OpenDirectory: {
-    GtkWidget *dialog;
-
+    action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
     if (!(caption && *caption))
       caption=I18N("Select Folder");
-    dialog=gtk_file_chooser_dialog_new(caption,
-                                       NULL,
-                                       GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                       "_Cancel", GTK_RESPONSE_CANCEL,
-                                       "_Open", GTK_RESPONSE_ACCEPT,
-                                       NULL);
-    if (gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_ACCEPT) {
-      char *filename;
+  }
+  }
 
-      filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-      GWEN_Buffer_Reset(pathBuffer);
-      GWEN_Buffer_AppendString(pathBuffer, filename);
-      g_free(filename);
-      gtk_widget_destroy(dialog);
+  dialog=gtk_file_chooser_dialog_new(caption,
+                                     NULL,
+                                     action,
+                                     "_Cancel", GTK_RESPONSE_CANCEL,
+                                     "_Open", GTK_RESPONSE_ACCEPT,
+                                     NULL);
+
+  if (action == GTK_FILE_CHOOSER_ACTION_OPEN || action == GTK_FILE_CHOOSER_ACTION_SAVE) {
+    if (folder && *folder) {
+      GFile *tmp_file = g_file_new_for_path (folder);
+      gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), tmp_file, NULL);
+      g_object_unref (tmp_file);
       free(folder);
-      return 0;
     }
-    gtk_widget_destroy(dialog);
-    free(folder);
-    return GWEN_ERROR_USER_ABORTED;
+    if (fileName && *fileName) {
+      gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName);
+      g_free(fileName);
+    }
   }
 
-  default:
-    break;
-  }
-  free(folder);
+  gtk_widget_show (dialog);
+  g_signal_connect (dialog, "response",
+                  G_CALLBACK (on_file_chooser_response),
+                  NULL);
 
   return GWEN_ERROR_USER_ABORTED;
 }
