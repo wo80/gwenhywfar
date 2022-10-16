@@ -113,7 +113,7 @@ void GWENHYWFAR_CB Gtk4Gui_Dialog_FreeData(GWEN_UNUSED void *bp, void *p)
   xdlg=(GTK4_GUI_DIALOG *) p;
 
   if (xdlg->mainWidget)
-    gtk_widget_destroy(xdlg->mainWidget);
+    gtk_window_close(GTK_WINDOW(xdlg->mainWidget));
 
   GWEN_FREE_OBJECT(xdlg);
 }
@@ -208,11 +208,17 @@ int Gtk4Gui_Dialog_Setup(GWEN_DIALOG *dlg, GWEN_UNUSED GtkWidget *parentWindow)
     DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
     return rv;
   }
-
   gw=GTK_WINDOW(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
-  gtk_window_set_type_hint(GTK_WINDOW(gw), GDK_WINDOW_TYPE_HINT_DIALOG);
-  gtk_window_set_position(GTK_WINDOW(gw), GTK_WIN_POS_CENTER_ON_PARENT);
+
+  /*
+     The following is longer possible with GTK4, see
+     https://docs.gtk.org/gtk4/migrating-3to4.html#adapt-to-gtkwindow-api-changes
+  */
+
+  /*gtk_window_set_type_hint(GTK_WINDOW(gw), GDK_WINDOW_TYPE_HINT_DIALOG);*/
+  /*gtk_window_set_position(GTK_WINDOW(gw), GTK_WIN_POS_CENTER_ON_PARENT);*/
   /*gtk_window_set_keep_above(GTK_WINDOW(gw), TRUE);*/
+
   xdlg->mainWidget=GTK_WIDGET(gw);
 
   tll=gtk_window_list_toplevels();
@@ -279,9 +285,7 @@ static void run_unmap_handler(GWEN_UNUSED GtkWindow *window, gpointer data)
 
 
 
-static gint run_delete_handler(GWEN_UNUSED GtkWindow *window,
-                               GWEN_UNUSED GdkEventAny *event,
-                               gpointer data)
+static gboolean run_delete_handler(GWEN_UNUSED GtkWindow *window, gpointer data)
 {
   GWEN_DIALOG *dlg;
   GTK4_GUI_DIALOG *xdlg;
@@ -336,7 +340,7 @@ int GTK4_Gui_Dialog_Run(GWEN_DIALOG *dlg, int untilEnd)
 
   xdlg->delete_handler =
     g_signal_connect(g,
-                     "delete-event",
+                     "close-request",
                      G_CALLBACK(run_delete_handler),
                      dlg);
 
