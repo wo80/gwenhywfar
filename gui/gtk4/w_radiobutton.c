@@ -18,9 +18,9 @@ int Gtk4Gui_WRadioButton_SetIntProperty(GWEN_WIDGET *w,
                                         int value,
                                         GWEN_UNUSED int doSignal)
 {
-  GtkButton *g;
+  GtkCheckButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
+  g=GTK_CHECK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -38,7 +38,7 @@ int Gtk4Gui_WRadioButton_SetIntProperty(GWEN_WIDGET *w,
     return 0;
 
   case GWEN_DialogProperty_Value:
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(g), (value==0)?FALSE:TRUE);
+    gtk_check_button_set_active(GTK_CHECK_BUTTON(g), (value==0)?FALSE:TRUE);
     return 0;
 
   default:
@@ -60,9 +60,9 @@ int Gtk4Gui_WRadioButton_GetIntProperty(GWEN_WIDGET *w,
                                         GWEN_UNUSED int index,
                                         int defaultValue)
 {
-  GtkButton *g;
+  GtkCheckButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
+  g=GTK_CHECK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
@@ -78,7 +78,7 @@ int Gtk4Gui_WRadioButton_GetIntProperty(GWEN_WIDGET *w,
     return 0;
 
   case GWEN_DialogProperty_Value:
-    return (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(g))==TRUE)?1:0;
+    return (gtk_check_button_get_active(GTK_CHECK_BUTTON(g))==TRUE)?1:0;
 
   default:
     break;
@@ -99,14 +99,14 @@ int Gtk4Gui_WRadioButton_SetCharProperty(GWEN_WIDGET *w,
                                          const char *value,
                                          GWEN_UNUSED int doSignal)
 {
-  GtkButton *g;
+  GtkCheckButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
+  g=GTK_CHECK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
   case GWEN_DialogProperty_Title:
-    gtk_button_set_label(g, value);
+    gtk_check_button_set_label(g, value);
     return 0;
   default:
     break;
@@ -126,14 +126,14 @@ const char *Gtk4Gui_WRadioButton_GetCharProperty(GWEN_WIDGET *w,
                                                  GWEN_UNUSED int index,
                                                  const char *defaultValue)
 {
-  GtkButton *g;
+  GtkCheckButton *g;
 
-  g=GTK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
+  g=GTK_CHECK_BUTTON(GWEN_Widget_GetImplData(w, GTK4_DIALOG_WIDGET_REAL));
   assert(g);
 
   switch (prop) {
   case GWEN_DialogProperty_Title:
-    return gtk_button_get_label(g);
+    return gtk_check_button_get_label(g);
   default:
     break;
   }
@@ -180,9 +180,9 @@ int Gtk4Gui_WRadioButton_Setup(GWEN_WIDGET *w)
 
   /* create widget */
   if (s && *s)
-    g=gtk_radio_button_new_with_mnemonic(NULL, s);
+    g=gtk_check_button_new_with_mnemonic(s);
   else
-    g=gtk_radio_button_new(NULL);
+    g=gtk_check_button_new();
 
   /* get root widget */
   wT=wParent;
@@ -197,10 +197,10 @@ int Gtk4Gui_WRadioButton_Setup(GWEN_WIDGET *w)
     wT=GWEN_Widget_Tree_GetBelow(wT);
   }
   if (wT && wT!=w) {
-    GSList *grp;
+    GtkCheckButton *grp;
 
-    grp=gtk_radio_button_get_group(GTK_RADIO_BUTTON(GWEN_Widget_GetImplData(wT, GTK4_DIALOG_WIDGET_REAL)));
-    gtk_radio_button_set_group(GTK_RADIO_BUTTON(g), grp);
+    grp=GTK_CHECK_BUTTON(GWEN_Widget_GetImplData(wT, GTK4_DIALOG_WIDGET_REAL));
+    gtk_check_button_set_group(GTK_CHECK_BUTTON(g), grp);
   }
 
   /* set pointers */
