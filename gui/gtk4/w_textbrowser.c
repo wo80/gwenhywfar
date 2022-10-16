@@ -204,9 +204,9 @@ int Gtk4Gui_WTextBrowser_Setup(GWEN_WIDGET *w)
   s=GWEN_Widget_GetText(w, 0);
 
   /* create widget */
-  gs=gtk_scrolled_window_new(NULL, NULL);
+  gs=gtk_scrolled_window_new();
   g=gtk_text_view_new();
-  gtk_container_add(GTK_CONTAINER(gs), GTK_WIDGET(g));
+  gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(gs), GTK_WIDGET(g));
 
   if (s && *s) {
     GWEN_BUFFER *tbuf;
