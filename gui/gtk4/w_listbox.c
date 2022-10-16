@@ -290,7 +290,8 @@ int Gtk4Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
         gtk_tree_view_column_pack_start(col, renderer, TRUE);
         gtk_tree_view_column_set_sort_column_id(col, i);
         gtk_tree_view_column_set_resizable(col, TRUE);
-        gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+        gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+		gtk_tree_view_column_set_expand(col, TRUE);
         gtk_tree_view_column_set_attributes(col, renderer, "text", i, NULL);
 
         gtk_tree_view_append_column(GTK_TREE_VIEW(g), col);
@@ -305,6 +306,7 @@ int Gtk4Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
       free(vcopy);
       GWEN_Widget_SetColumns(w, cols);
       gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(g), TRUE);
+      gtk_tree_view_columns_autosize(GTK_TREE_VIEW(g));
     }
     else {
       DBG_ERROR(GWEN_LOGDOMAIN, "No columns (empty title)");
@@ -508,19 +510,14 @@ int Gtk4Gui_WListBox_Setup(GWEN_WIDGET *w)
 
   wParent=GWEN_Widget_Tree_GetParent(w);
 
-  gScroll=gtk_scrolled_window_new(NULL, NULL);
+  gScroll=gtk_scrolled_window_new();
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(gScroll),
                                  GTK_POLICY_AUTOMATIC,
                                  GTK_POLICY_AUTOMATIC);
   g=gtk_tree_view_new();
   gtk_tree_view_set_headers_clickable(GTK_TREE_VIEW(g), TRUE);
-  /* gtk_tree_view_set_rules_hint is deprecated in gtk-3.14 on the
-   * grounds that it's really up to the theme and the user whether the
-   * treeview should be drawn with alternating background colors. */
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-  gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(g), TRUE);
-  G_GNUC_END_IGNORE_DEPRECATIONS
-  gtk_container_add(GTK_CONTAINER(gScroll), GTK_WIDGET(g));
+  /* TODO: alternating background colors */
+  gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(gScroll), GTK_WIDGET(g));
 
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) gScroll);
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
