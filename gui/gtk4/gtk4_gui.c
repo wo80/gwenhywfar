@@ -312,7 +312,7 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
                   G_CALLBACK (GTK4_on_file_chooser_response),
                   NULL);
 
-  return 0;
+  return GWEN_INFO_USE_CALLBACK;
 }
 
 

@@ -67,6 +67,8 @@ int GTK4_Gui_GetFileName(GWEN_GUI *gui,
   This implementation should replace the above. That should allow staying compatible
   with previous versions. The calling code (open/save keyfile in HBCI/EBICS backend)
   has to make sure that both blocking and non-blocking options are supported.
+  The returned value should be GWEN_INFO_USE_CALLBACK whenever the callback is used,
+  GWEN_SUCCESS or GWEN_ERROR_USER_ABORTED (as before) when the old behavior is used.
 */
 
 static GWENHYWFAR_CB
