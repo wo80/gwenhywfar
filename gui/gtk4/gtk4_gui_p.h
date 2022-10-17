@@ -15,6 +15,11 @@
 
 #include <gwenhywfar/gui_be.h>
 
+/* Datatype to enable non-blocking dialog callbacks for GTK4 */
+typedef struct {
+  GWEN_GUI_GetFileName_Callback callback;
+  GWEN_BUFFER *buffer;
+} GTK4_GUI_GetFileName_Callback_Wrapper;
 
 
 typedef struct GTK4_GUI GTK4_GUI;
@@ -58,6 +63,21 @@ int GTK4_Gui_GetFileName(GWEN_GUI *gui,
                          GWEN_BUFFER *pathBuffer,
                          uint32_t guiid);
 
+/*
+  This implementation should replace the above. That should allow staying compatible
+  with previous versions. The calling code (open/save keyfile in HBCI/EBICS backend)
+  has to make sure that both blocking and non-blocking options are supported.
+*/
+
+static GWENHYWFAR_CB
+int GTK4_Gui_GetFileName_NonBlocking(GWEN_GUI *gui,
+                         const char *caption,
+                         GWEN_GUI_FILENAME_TYPE fnt,
+                         uint32_t flags,
+                         const char *patterns,
+                         GWEN_BUFFER *pathBuffer,
+                         uint32_t guiid,
+                         GWEN_GUI_GetFileName_Callback callback);
 
 #endif
 

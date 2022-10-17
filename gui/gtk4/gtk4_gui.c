@@ -35,6 +35,11 @@ GWEN_INHERIT(GWEN_GUI, GTK4_GUI)
 
 
 
+/* Global variable to hold the dialog callback. */
+static GTK4_GUI_GetFileName_Callback_Wrapper GTK4_GetFileName_Handler;
+
+
+
 GWEN_GUI *Gtk4_Gui_new()
 {
   GWEN_GUI *gui;
@@ -174,33 +179,12 @@ GWENHYWFAR_CB int GTK4_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg
   return rv;
 }
 
-  /*
-     Opening file dialogs blocking the UI thread is no longer possible in GTK4, see
-     https://docs.gtk.org/gtk4/migrating-3to4.html#stop-using-blocking-dialog-functions
+/*
+   Opening file dialogs blocking the UI thread is no longer possible in GTK4, see
+   https://docs.gtk.org/gtk4/migrating-3to4.html#stop-using-blocking-dialog-functions
 
-     IMPORTANT: need to fix this. Currently not possible with Gwen GUI design?
-  */
-
-static void
-on_file_chooser_response (GtkDialog *dialog,
-                                 int        response)
-{
-  if (response == GTK_RESPONSE_ACCEPT)
-  {
-    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
-
-    g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
-
-    /*
-    filename = g_file_get_path(file);
-    GWEN_Buffer_Reset(pathBuffer);
-    GWEN_Buffer_AppendString(pathBuffer, filename);
-    g_free(filename);
-    */
-  }
-
-  gtk_window_destroy (GTK_WINDOW (dialog));
-}
+   IMPORTANT: need to fix this. Currently not possible with Gwen GUI design?
+*/
 
 GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        const char *caption,
@@ -209,6 +193,58 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        GWEN_UNUSED const char *patterns,
                                        GWEN_BUFFER *pathBuffer,
                                        GWEN_UNUSED uint32_t guiid)
+{
+  return GWEN_ERROR_NOT_AVAILABLE;
+}
+
+
+/* Proposal for non-blocking GUI using a simple callback. */
+
+static void
+GTK4_on_file_chooser_response(GtkDialog *dialog,
+                              int        response)
+{
+  char *fileName = NULL;
+  GWEN_BUFFER *pathBuffer;
+
+  if (response == GTK_RESPONSE_ACCEPT && GTK4_GetFileName_Handler.callback)
+  {
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+
+    g_autoptr(GFile) file = gtk_file_chooser_get_file(chooser);
+
+    fileName = g_file_get_path(file);
+    pathBuffer = GTK4_GetFileName_Handler.buffer;
+
+    if (pathBuffer)
+    {
+      GWEN_Buffer_Reset(pathBuffer);
+      GWEN_Buffer_AppendString(pathBuffer, fileName);
+    }
+
+    gtk_window_destroy (GTK_WINDOW (dialog));
+
+    /* TODO: filling the buffer and passing the filename to the callback
+       is redundant. Remove one of them? */
+    GTK4_GetFileName_Handler.callback(response, fileName);
+    GTK4_GetFileName_Handler.buffer = NULL;
+
+    g_free(fileName);
+  } else {
+    /* TODO: should the callback be fired with GWEN_ERROR_USER_ABORTED? */
+
+    gtk_window_destroy (GTK_WINDOW (dialog));
+  }
+}
+
+GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
+                                       const char *caption,
+                                       GWEN_GUI_FILENAME_TYPE fnt,
+                                       GWEN_UNUSED uint32_t flags,
+                                       GWEN_UNUSED const char *patterns,
+                                       GWEN_BUFFER *pathBuffer,
+                                       GWEN_UNUSED uint32_t guiid,
+                                       GWEN_GUI_GetFileName_Callback callback)
 {
   char *folder=NULL;
   char *fileName=NULL;
@@ -267,12 +303,16 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
     }
   }
 
+  /* Use global variable to register callback and pass buffer. */
+  GTK4_GetFileName_Handler.callback = callback;
+  GTK4_GetFileName_Handler.buffer = pathBuffer;
+
   gtk_widget_show (dialog);
   g_signal_connect (dialog, "response",
-                  G_CALLBACK (on_file_chooser_response),
+                  G_CALLBACK (GTK4_on_file_chooser_response),
                   NULL);
 
-  return GWEN_ERROR_USER_ABORTED;
+  return 0;
 }
 
 
