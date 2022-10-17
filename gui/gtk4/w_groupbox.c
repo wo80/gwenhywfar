@@ -191,6 +191,13 @@ int Gtk4Gui_WGroupBox_Setup(GWEN_WIDGET *w)
                        GTK4_GUI_DIALOG_DEFAULT_BOX_SPACING);
   gtk_frame_set_child(GTK_FRAME(g), gContent);
 
+#if GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING
+ gtk_widget_set_margin_start(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_end(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_top(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_bottom(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+#endif
+
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) gContent);
 

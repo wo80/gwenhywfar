@@ -224,6 +224,14 @@ int Gtk4Gui_WProgressBar_Setup(GWEN_WIDGET *w)
   wParent=GWEN_Widget_Tree_GetParent(w);
 
   g=gtk_progress_bar_new();
+
+#if GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING
+ gtk_widget_set_margin_start(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_end(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_top(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_bottom(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+#endif
+
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 

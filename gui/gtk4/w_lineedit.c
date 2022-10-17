@@ -203,6 +203,13 @@ int Gtk4Gui_WLineEdit_Setup(GWEN_WIDGET *w)
     gtk_editable_set_text(GTK_EDITABLE(g), s);
   gtk_entry_set_visibility(GTK_ENTRY(g), text_is_visible);
 
+#if GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING
+ gtk_widget_set_margin_start(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_end(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_top(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+ gtk_widget_set_margin_bottom(g, GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING);
+#endif
+
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_REAL, (void *) g);
   GWEN_Widget_SetImplData(w, GTK4_DIALOG_WIDGET_CONTENT, (void *) g);
 
