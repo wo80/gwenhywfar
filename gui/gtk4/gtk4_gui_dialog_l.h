@@ -21,6 +21,14 @@
 
 #define GTK4_GUI_DIALOG_DEFAULT_BOX_SPACING 3
 
+/*
+  Add padding to some types of child wigdets. This might not be perfect, for
+  example when multiple buttons are stacked, the padding will appear on both
+  sides of neighboring buttons doubling the space. Still this is better than
+  a tightly packed UI.
+*/
+#define GTK4_GUI_DIALOG_DEFAULT_BOX_PADDING 3
+
 
 typedef struct {
   GWEN_DIALOG *dialog;
