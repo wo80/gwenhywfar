@@ -929,6 +929,24 @@ esac
 AC_SUBST(with_gui_gtk3)
 AM_CONDITIONAL(WITH_GUI_GTK3, [test "$with_gui_gtk3" = "yes"])
 
+###-------------------------------------------------------------------------
+# Check for GTK+
+#
+
+
+case "$gwenhywfar_guis" in
+  *gtk4*)
+     # Minimum required gtk4 version
+     pkg_modules="gtk4 >= 4.8.1"
+     PKG_CHECK_MODULES(GTK4, [$pkg_modules])
+     AC_DEFINE(BUILD_GUI_GTK4, 1, [if gwen gui for gtk4 is built])
+     with_gui_gtk4="yes"
+     ;;
+esac
+
+AC_SUBST(with_gui_gtk4)
+AM_CONDITIONAL(WITH_GUI_GTK4, [test "$with_gui_gtk4" = "yes"])
+
 
 
 ###-------------------------------------------------------------------------
@@ -1465,6 +1483,8 @@ AC_CONFIG_FILES([Doxyfile
                  gui/gtk2/gwengui-gtk2.pc
                  gui/gtk3/Makefile
                  gui/gtk3/gwengui-gtk3.pc
+                 gui/gtk4/Makefile
+                 gui/gtk4/gwengui-gtk4.pc
                  gui/cocoa/Makefile
                  gui/testdialogs/Makefile
 		])
@@ -1602,6 +1622,24 @@ for d in gui/gtk3; do
       	 ;;
       *)
     	 ln -s "${lprefix}/${d}/${f}" "gwenhywfar5/gwen-gui-gtk3/${f}"
+         ;;
+    esac
+  done
+done
+
+
+# gtk4
+#
+rm -Rf gwenhywfar5/gwen-gui-gtk4 2>/dev/null
+mkdir -p gwenhywfar5/gwen-gui-gtk4
+for d in gui/gtk4; do
+  hfiles=`( cd "${srcdir}/${d}" && ls *.h 2>/dev/null )`
+  for f in ${hfiles}; do
+    case ${f} in
+      *_l.h | *_p.h | gtk4_gui_*.h)
+      	 ;;
+      *)
+    	 ln -s "${lprefix}/${d}/${f}" "gwenhywfar5/gwen-gui-gtk4/${f}"
          ;;
     esac
   done
