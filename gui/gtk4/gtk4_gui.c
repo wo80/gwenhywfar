@@ -201,20 +201,6 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        GWEN_BUFFER *pathBuffer,
                                        GWEN_UNUSED uint32_t guiid)
 {
-  char *folder=NULL;
-  char *fileName=NULL;
-
-  if (GWEN_Buffer_GetUsedBytes(pathBuffer)) {
-    folder=strdup(GWEN_Buffer_GetStart(pathBuffer));
-    fileName=strchr(folder, GWEN_DIR_SEPARATOR);
-    if (fileName) {
-      *fileName=0;
-      fileName++;
-      if (*fileName==0)
-        fileName=NULL;
-    }
-  }
-
   GtkWidget *dialog;
   GtkFileChooserAction action;
 
@@ -252,16 +238,29 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                      NULL);
 
   if (action == GTK_FILE_CHOOSER_ACTION_OPEN || action == GTK_FILE_CHOOSER_ACTION_SAVE) {
+    char *folder=NULL;
+    char *fileName=NULL;
+
+    if (GWEN_Buffer_GetUsedBytes(pathBuffer)) {
+      folder=strdup(GWEN_Buffer_GetStart(pathBuffer));
+      fileName=strrchr(folder, GWEN_DIR_SEPARATOR);
+      if (fileName) {
+        *fileName=0;
+        fileName++;
+        if (*fileName==0)
+          fileName=NULL;
+      }
+    }
+
     if (folder && *folder) {
       GFile *tmp_file = g_file_new_for_path (folder);
       gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), tmp_file, NULL);
       g_object_unref (tmp_file);
-      free(folder);
     }
     if (fileName && *fileName) {
       gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName);
-      g_free(fileName);
     }
+    free(folder);
   }
 
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
