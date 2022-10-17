@@ -290,8 +290,8 @@ int Gtk4Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
         gtk_tree_view_column_pack_start(col, renderer, TRUE);
         gtk_tree_view_column_set_sort_column_id(col, i);
         gtk_tree_view_column_set_resizable(col, TRUE);
-        gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-		gtk_tree_view_column_set_expand(col, TRUE);
+        gtk_tree_view_column_set_expand(col, TRUE);
+        gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_GROW_ONLY);
         gtk_tree_view_column_set_attributes(col, renderer, "text", i, NULL);
 
         gtk_tree_view_append_column(GTK_TREE_VIEW(g), col);
@@ -306,7 +306,6 @@ int Gtk4Gui_WListBox_SetCharProperty(GWEN_WIDGET *w,
       free(vcopy);
       GWEN_Widget_SetColumns(w, cols);
       gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(g), TRUE);
-      gtk_tree_view_columns_autosize(GTK_TREE_VIEW(g));
     }
     else {
       DBG_ERROR(GWEN_LOGDOMAIN, "No columns (empty title)");
