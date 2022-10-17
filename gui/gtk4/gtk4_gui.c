@@ -223,19 +223,25 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
     action = GTK_FILE_CHOOSER_ACTION_OPEN;
     if (!(caption && *caption))
       caption=I18N("Open File");
+    break;
   }
 
   case GWEN_Gui_FileNameType_SaveFileName: {
     action = GTK_FILE_CHOOSER_ACTION_SAVE;
     if (!(caption && *caption))
       caption=I18N("Save File");
+    break;
   }
 
   case GWEN_Gui_FileNameType_OpenDirectory: {
     action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
     if (!(caption && *caption))
       caption=I18N("Select Folder");
+    break;
   }
+  default:
+    /* Returning GWEN_ERROR_USER_ABORTED here is consistent with the GTK3 implementation. */
+    return GWEN_ERROR_USER_ABORTED;
   }
 
   dialog=gtk_file_chooser_dialog_new(caption,
