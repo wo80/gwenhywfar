@@ -176,9 +176,13 @@ typedef enum {
 typedef struct GWEN_GUI GWEN_GUI;
 GWEN_INHERIT_FUNCTION_LIB_DEFS(GWEN_GUI, GWENHYWFAR_API)
 
-/*
-  If callbacks for non-blocking dialogs will be implemented, this typedef
-  needs to be moved to   gwenhywfar/src/gui/gui.h
+
+/**
+ * Callback for non-blocking dialogs (GTK4 filechooser)
+ *
+ * @param result The file chooser dialog result.
+ * @param pathBuffer The buffer holding the chosen file path.
+ * @param dlg The parent dialog which opened the filechooser.
  */
 typedef void (*GWEN_GUI_GetFileName_Callback)(int result, GWEN_BUFFER *pathBuffer, GWEN_DIALOG *dlg);
 
@@ -972,7 +976,9 @@ typedef enum {
  * @param pathBuffer upon call this may contain a preselected path/filename, upon return
  *   this will contain the selected name
  *
- * @return 0 if ok, !=0 on error
+ * @return 0 if ok. A return value of GWEN_INFO_USE_CALLBACK indicates that the GUI
+ *   backend requires to call GWEN_Gui_GetFileNameNonBlocking. Any other return value 
+ *   indicates an error.
  */
 GWENHYWFAR_API
 int GWEN_Gui_GetFileName(const char *caption,
@@ -983,7 +989,7 @@ int GWEN_Gui_GetFileName(const char *caption,
                          uint32_t guiid);
 
 /**
- * This function is used to get the path and name of a single file or folder.
+ * This function is used to get the path and name of a single file or folder in a non-blocking way.
  *
  * @param caption title for the dialog
  * @param fnt type of the operation (see @ref GWEN_Gui_FileNameType_OpenFileName and following)
@@ -992,6 +998,8 @@ int GWEN_Gui_GetFileName(const char *caption,
  *   "All Files (*)\tC++ Sources (*.cpp,*.cc)\tC++ Headers (*.hpp,*.hh,*.h)"
  * @param pathBuffer upon call this may contain a preselected path/filename, upon return
  *   this will contain the selected name
+ * @param dlg The calling dialog.
+ * @param callback The callback will be called when the file dialog closes.
  *
  * @return 0 if ok, !=0 on error
  */

@@ -183,8 +183,6 @@ GWENHYWFAR_CB int GTK4_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg
 /*
    Opening file dialogs blocking the UI thread is no longer possible in GTK4, see
    https://docs.gtk.org/gtk4/migrating-3to4.html#stop-using-blocking-dialog-functions
-
-   IMPORTANT: need to fix this. Currently not possible with Gwen GUI design?
 */
 
 GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
@@ -273,24 +271,10 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
     return GWEN_ERROR_USER_ABORTED;
   }
 
-  GtkWindow *parent = NULL;
-
-  /* TODO: how to get the GtkWindow from GWEN_DIALOG dlg? */
-
-  /*
-  GTK4_GUI_DIALOG *xdlg;
-
-  assert(dlg);
-  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
-  assert(xdlg);
-
-
-  if (xdlg->mainWidget)
-    parent = GTK_WINDOW(xdlg->mainWidget);
-  */
+  GtkWidget *parent = Gtk4Gui_Dialog_GetMainWidget(dlg);
 
   dialog=gtk_file_chooser_dialog_new(caption,
-                                     parent,
+                                     GTK_WINDOW(parent),
                                      action,
                                      "_Cancel", GTK_RESPONSE_CANCEL,
                                      "_Open", GTK_RESPONSE_ACCEPT,
@@ -327,7 +311,6 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
   GTK4_GetFileName_Handler.buffer = pathBuffer;
   GTK4_GetFileName_Handler.dlg = dlg;
 
-  /* This shouldn't be neccessary once we set parent correctly, see TODO above. */
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 
   gtk_widget_show (dialog);
