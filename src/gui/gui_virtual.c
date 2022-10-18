@@ -309,6 +309,19 @@ GWEN_GUI_GET_FILENAME_FN GWEN_Gui_SetGetFileNameFn(GWEN_GUI *gui, GWEN_GUI_GET_F
 
 
 
+GWEN_GUI_GET_FILENAME_NB_FN GWEN_Gui_SetGetFileNameNonBlockingFn(GWEN_GUI *gui, GWEN_GUI_GET_FILENAME_NB_FN f)
+{
+  GWEN_GUI_GET_FILENAME_NB_FN of;
+
+  assert(gui);
+  of=gui->getFileNameNonBlockingFn;
+  gui->getFileNameNonBlockingFn=f;
+
+  return of;
+}
+
+
+
 GWEN_GUI_GETSYNCIO_FN GWEN_Gui_SetGetSyncIoFn(GWEN_GUI *gui, GWEN_GUI_GETSYNCIO_FN f)
 {
   GWEN_GUI_GETSYNCIO_FN of;
@@ -617,6 +630,25 @@ int GWEN_Gui_GetFileName(const char *caption,
   gui=GWEN_Gui_GetGui();
   if (gui && gui->getFileNameFn)
     return gui->getFileNameFn(gui, caption, fnt, flags, patterns, pathBuffer, guiid);
+  return GWEN_ERROR_NOT_IMPLEMENTED;
+}
+
+
+
+
+int GWEN_Gui_GetFileNameNonBlocking(const char *caption,
+                         GWEN_GUI_FILENAME_TYPE fnt,
+                         uint32_t flags,
+                         const char *patterns,
+                         GWEN_BUFFER *pathBuffer,
+                         GWEN_DIALOG *dlg,
+                         GWEN_GUI_GetFileName_Callback callback)
+{
+  GWEN_GUI *gui;
+
+  gui=GWEN_Gui_GetGui();
+  if (gui && gui->getFileNameNonBlockingFn)
+    return gui->getFileNameNonBlockingFn(gui, caption, fnt, flags, patterns, pathBuffer, dlg, callback);
   return GWEN_ERROR_NOT_IMPLEMENTED;
 }
 

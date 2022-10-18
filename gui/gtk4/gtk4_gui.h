@@ -30,14 +30,7 @@
 
 GTK4GUI_API GWEN_GUI *Gtk4_Gui_new();
 
-/*
-  If callbacks for non-blocking dialogs will be implemented, this typedef
-  needs to be moved to   gwenhywfar/src/gui/gui.h
- */
-typedef void (*GWEN_GUI_GetFileName_Callback)(int result, char *filename);
 
-/* Used as a return value for GWEN_Gui_GetFileName in case of callback */
-#define GWEN_INFO_USE_CALLBACK 1001
 
 #endif
 

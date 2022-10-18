@@ -56,6 +56,7 @@ GWEN_GUI *Gtk4_Gui_new()
   xgui->closeDialogFn=GWEN_Gui_SetCloseDialogFn(gui, GTK4_Gui_CloseDialog);
   xgui->runDialogFn=GWEN_Gui_SetRunDialogFn(gui, GTK4_Gui_RunDialog);
   xgui->getFileNameDialogFn=GWEN_Gui_SetGetFileNameFn(gui, GTK4_Gui_GetFileName);
+  xgui->getFileNameNonBlockingDialogFn=GWEN_Gui_SetGetFileNameNonBlockingFn(gui, GTK4_Gui_GetFileName_NonBlocking);
 
   return gui;
 }
@@ -194,7 +195,7 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        GWEN_BUFFER *pathBuffer,
                                        GWEN_UNUSED uint32_t guiid)
 {
-  return GWEN_ERROR_NOT_AVAILABLE;
+  return GWEN_INFO_USE_CALLBACK;
 }
 
 
@@ -224,10 +225,7 @@ GTK4_on_file_chooser_response(GtkDialog *dialog,
 
     gtk_window_destroy (GTK_WINDOW (dialog));
 
-    /* TODO: filling the buffer and passing the filename to the callback
-       is redundant. Remove one of them? */
-    GTK4_GetFileName_Handler.callback(response, fileName);
-    GTK4_GetFileName_Handler.buffer = NULL;
+    GTK4_GetFileName_Handler.callback(response, pathBuffer, GTK4_GetFileName_Handler.dlg);
 
     g_free(fileName);
   } else {
@@ -243,23 +241,9 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
                                        GWEN_UNUSED uint32_t flags,
                                        GWEN_UNUSED const char *patterns,
                                        GWEN_BUFFER *pathBuffer,
-                                       GWEN_UNUSED uint32_t guiid,
+                                       GWEN_DIALOG *dlg,
                                        GWEN_GUI_GetFileName_Callback callback)
 {
-  char *folder=NULL;
-  char *fileName=NULL;
-
-  if (GWEN_Buffer_GetUsedBytes(pathBuffer)) {
-    folder=strdup(GWEN_Buffer_GetStart(pathBuffer));
-    fileName=strchr(folder, GWEN_DIR_SEPARATOR);
-    if (fileName) {
-      *fileName=0;
-      fileName++;
-      if (*fileName==0)
-        fileName=NULL;
-    }
-  }
-
   GtkWidget *dialog;
   GtkFileChooserAction action;
 
@@ -268,51 +252,90 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
     action = GTK_FILE_CHOOSER_ACTION_OPEN;
     if (!(caption && *caption))
       caption=I18N("Open File");
+    break;
   }
 
   case GWEN_Gui_FileNameType_SaveFileName: {
     action = GTK_FILE_CHOOSER_ACTION_SAVE;
     if (!(caption && *caption))
       caption=I18N("Save File");
+    break;
   }
 
   case GWEN_Gui_FileNameType_OpenDirectory: {
     action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
     if (!(caption && *caption))
       caption=I18N("Select Folder");
+    break;
   }
+  default:
+    /* Returning GWEN_ERROR_USER_ABORTED here is consistent with the GTK3 implementation. */
+    return GWEN_ERROR_USER_ABORTED;
   }
 
+  GtkWindow *parent = NULL;
+
+  /* TODO: how to get the GtkWindow from GWEN_DIALOG dlg? */
+
+  /*
+  GTK4_GUI_DIALOG *xdlg;
+
+  assert(dlg);
+  xdlg=GWEN_INHERIT_GETDATA(GWEN_DIALOG, GTK4_GUI_DIALOG, dlg);
+  assert(xdlg);
+
+
+  if (xdlg->mainWidget)
+    parent = GTK_WINDOW(xdlg->mainWidget);
+  */
+
   dialog=gtk_file_chooser_dialog_new(caption,
-                                     NULL,
+                                     parent,
                                      action,
                                      "_Cancel", GTK_RESPONSE_CANCEL,
                                      "_Open", GTK_RESPONSE_ACCEPT,
                                      NULL);
 
   if (action == GTK_FILE_CHOOSER_ACTION_OPEN || action == GTK_FILE_CHOOSER_ACTION_SAVE) {
+    char *folder=NULL;
+    char *fileName=NULL;
+
+    if (GWEN_Buffer_GetUsedBytes(pathBuffer)) {
+      folder=strdup(GWEN_Buffer_GetStart(pathBuffer));
+      fileName=strrchr(folder, GWEN_DIR_SEPARATOR);
+      if (fileName) {
+        *fileName=0;
+        fileName++;
+        if (*fileName==0)
+          fileName=NULL;
+      }
+    }
+
     if (folder && *folder) {
       GFile *tmp_file = g_file_new_for_path (folder);
       gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), tmp_file, NULL);
       g_object_unref (tmp_file);
-      free(folder);
     }
     if (fileName && *fileName) {
       gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), fileName);
-      g_free(fileName);
     }
+    free(folder);
   }
 
-  /* Use global variable to register callback and pass buffer. */
+  /* Use global variable to register callback and pass buffer and parent dialog. */
   GTK4_GetFileName_Handler.callback = callback;
   GTK4_GetFileName_Handler.buffer = pathBuffer;
+  GTK4_GetFileName_Handler.dlg = dlg;
+
+  /* This shouldn't be neccessary once we set parent correctly, see TODO above. */
+  gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 
   gtk_widget_show (dialog);
   g_signal_connect (dialog, "response",
                   G_CALLBACK (GTK4_on_file_chooser_response),
                   NULL);
 
-  return GWEN_INFO_USE_CALLBACK;
+  return 0;
 }
 
 

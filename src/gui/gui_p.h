@@ -72,6 +72,7 @@ struct GWEN_GUI {
   GWEN_GUI_WRITE_DIALOG_PREFS_FN writeDialogPrefsFn;
 
   GWEN_GUI_GET_FILENAME_FN getFileNameFn;
+  GWEN_GUI_GET_FILENAME_NB_FN getFileNameNonBlockingFn;
 
   GWEN_GUI_GETSYNCIO_FN getSyncIoFn;
 
