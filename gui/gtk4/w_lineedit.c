@@ -140,10 +140,7 @@ const char *Gtk4Gui_WLineEdit_GetCharProperty(GWEN_WIDGET *w,
 }
 
 
-
-static void Gtk4Gui_WLineEdit_Deleted_text_handler(GWEN_UNUSED GtkEntryBuffer *entrybuffer,
-                                                   GWEN_UNUSED guint arg1,
-                                                   GWEN_UNUSED guint arg2,
+static void Gtk4Gui_WLineEdit_Text_Changed_handler(GWEN_UNUSED GtkEditable* self,
                                                    gpointer data)
 {
   GWEN_WIDGET *w;
@@ -159,30 +156,6 @@ static void Gtk4Gui_WLineEdit_Deleted_text_handler(GWEN_UNUSED GtkEntryBuffer *e
   else if (rv==GWEN_DialogEvent_ResultReject)
     Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
 }
-
-
-
-static void Gtk4Gui_WLineEdit_Inserted_text_handler(GWEN_UNUSED GtkEntryBuffer *entrybuffer,
-                                                    GWEN_UNUSED guint arg1,
-                                                    GWEN_UNUSED gchar *arg2,
-                                                    GWEN_UNUSED guint arg3,
-                                                    gpointer data)
-{
-  GWEN_WIDGET *w;
-  int rv;
-
-  w=data;
-  assert(w);
-  rv=GWEN_Dialog_EmitSignal(GWEN_Widget_GetDialog(w),
-                            GWEN_DialogEvent_TypeValueChanged,
-                            GWEN_Widget_GetName(w));
-  if (rv==GWEN_DialogEvent_ResultAccept)
-    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 1);
-  else if (rv==GWEN_DialogEvent_ResultReject)
-    Gtk4Gui_Dialog_Leave(GWEN_Widget_GetTopDialog(w), 0);
-}
-
-
 
 int Gtk4Gui_WLineEdit_Setup(GWEN_WIDGET *w)
 {
@@ -218,16 +191,10 @@ int Gtk4Gui_WLineEdit_Setup(GWEN_WIDGET *w)
   GWEN_Widget_SetSetCharPropertyFn(w, Gtk4Gui_WLineEdit_SetCharProperty);
   GWEN_Widget_SetGetCharPropertyFn(w, Gtk4Gui_WLineEdit_GetCharProperty);
 
-  g_signal_connect(gtk_entry_get_buffer(GTK_ENTRY(g)),
-                   "deleted-text",
-                   G_CALLBACK(Gtk4Gui_WLineEdit_Deleted_text_handler),
+  g_signal_connect(GTK_EDITABLE(g),
+                   "changed",
+                   G_CALLBACK(Gtk4Gui_WLineEdit_Text_Changed_handler),
                    w);
-
-  g_signal_connect(gtk_entry_get_buffer(GTK_ENTRY(g)),
-                   "inserted-text",
-                   G_CALLBACK(Gtk4Gui_WLineEdit_Inserted_text_handler),
-                   w);
-
   if (wParent)
     GWEN_Widget_AddChildGuiWidget(wParent, w);
 
