@@ -35,6 +35,11 @@ GWEN_INHERIT(GWEN_GUI, GTK4_GUI)
 
 
 
+/* Global variable to hold the dialog callback. */
+static GTK4_GUI_GetFileName_Callback_Wrapper GTK4_GetFileName_Handler;
+
+
+
 GWEN_GUI *Gtk4_Gui_new()
 {
   GWEN_GUI *gui;
@@ -51,6 +56,7 @@ GWEN_GUI *Gtk4_Gui_new()
   xgui->closeDialogFn=GWEN_Gui_SetCloseDialogFn(gui, GTK4_Gui_CloseDialog);
   xgui->runDialogFn=GWEN_Gui_SetRunDialogFn(gui, GTK4_Gui_RunDialog);
   xgui->getFileNameDialogFn=GWEN_Gui_SetGetFileNameFn(gui, GTK4_Gui_GetFileName);
+  xgui->getFileNameNonBlockingDialogFn=GWEN_Gui_SetGetFileNameNonBlockingFn(gui, GTK4_Gui_GetFileName_NonBlocking);
 
   return gui;
 }
@@ -175,23 +181,9 @@ GWENHYWFAR_CB int GTK4_Gui_RunDialog(GWEN_UNUSED GWEN_GUI *gui, GWEN_DIALOG *dlg
 }
 
 /*
-  Opening file dialogs blocking the UI thread is no longer possible in GTK4, see
-  https://docs.gtk.org/gtk4/migrating-3to4.html#stop-using-blocking-dialog-functions
-
-  Gwen GUI currently doesn't support handling filechooser results in a callback, so
-  we use a dirty dirty VERY DIRTY hack to block with a GMainLoop.
+   Opening file dialogs blocking the UI thread is no longer possible in GTK4, see
+   https://docs.gtk.org/gtk4/migrating-3to4.html#stop-using-blocking-dialog-functions
 */
-
-static GMainLoop* gtk4_dialog_gmainloop;
-static int gtk4_file_chooser_dialog_response;
-
-static void
-GTK4_on_file_chooser_response (GtkDialog *dialog,
-                                 int        response)
-{
-  gtk4_file_chooser_dialog_response = response;
-  g_main_loop_quit(gtk4_dialog_gmainloop);
-}
 
 GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        const char *caption,
@@ -200,6 +192,55 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
                                        GWEN_UNUSED const char *patterns,
                                        GWEN_BUFFER *pathBuffer,
                                        GWEN_UNUSED uint32_t guiid)
+{
+  return GWEN_INFO_USE_CALLBACK;
+}
+
+
+/* Proposal for non-blocking GUI using a simple callback. */
+
+static void
+GTK4_on_file_chooser_response(GtkDialog *dialog,
+                              int        response)
+{
+  char *fileName = NULL;
+  GWEN_BUFFER *pathBuffer;
+
+  if (response == GTK_RESPONSE_ACCEPT && GTK4_GetFileName_Handler.callback)
+  {
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+
+    g_autoptr(GFile) file = gtk_file_chooser_get_file(chooser);
+
+    fileName = g_file_get_path(file);
+    pathBuffer = GTK4_GetFileName_Handler.buffer;
+
+    if (pathBuffer)
+    {
+      GWEN_Buffer_Reset(pathBuffer);
+      GWEN_Buffer_AppendString(pathBuffer, fileName);
+    }
+
+    gtk_window_destroy (GTK_WINDOW (dialog));
+
+    GTK4_GetFileName_Handler.callback(response, pathBuffer, GTK4_GetFileName_Handler.dlg);
+
+    g_free(fileName);
+  } else {
+    /* TODO: should the callback be fired with GWEN_ERROR_USER_ABORTED? */
+
+    gtk_window_destroy (GTK_WINDOW (dialog));
+  }
+}
+
+GWENHYWFAR_CB int GTK4_Gui_GetFileName_NonBlocking(GWEN_UNUSED GWEN_GUI *gui,
+                                       const char *caption,
+                                       GWEN_GUI_FILENAME_TYPE fnt,
+                                       GWEN_UNUSED uint32_t flags,
+                                       GWEN_UNUSED const char *patterns,
+                                       GWEN_BUFFER *pathBuffer,
+                                       GWEN_DIALOG *dlg,
+                                       GWEN_GUI_GetFileName_Callback callback)
 {
   GtkWidget *dialog;
   GtkFileChooserAction action;
@@ -230,8 +271,10 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
     return GWEN_ERROR_USER_ABORTED;
   }
 
+  GtkWidget *parent = Gtk4Gui_Dialog_GetMainWidget(dlg);
+
   dialog=gtk_file_chooser_dialog_new(caption,
-                                     NULL,
+                                     GTK_WINDOW(parent),
                                      action,
                                      "_Cancel", GTK_RESPONSE_CANCEL,
                                      "_Open", GTK_RESPONSE_ACCEPT,
@@ -263,34 +306,19 @@ GWENHYWFAR_CB int GTK4_Gui_GetFileName(GWEN_UNUSED GWEN_GUI *gui,
     free(folder);
   }
 
+  /* Use global variable to register callback and pass buffer and parent dialog. */
+  GTK4_GetFileName_Handler.callback = callback;
+  GTK4_GetFileName_Handler.buffer = pathBuffer;
+  GTK4_GetFileName_Handler.dlg = dlg;
+
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
-  gtk_widget_show(dialog);
-  g_signal_connect(dialog, "response",
-                   G_CALLBACK (GTK4_on_file_chooser_response),
-                   NULL);
 
-  /* Here it comes ... never do this ... really, don't!!! */
-  gtk4_dialog_gmainloop = g_main_loop_new(NULL, FALSE);
-  g_main_loop_run(gtk4_dialog_gmainloop);
+  gtk_widget_show (dialog);
+  g_signal_connect (dialog, "response",
+                  G_CALLBACK (GTK4_on_file_chooser_response),
+                  NULL);
 
-  /* Execution will continue here as soon as the dialog response callback quits the loop. */
-
-  if (gtk4_file_chooser_dialog_response == GTK_RESPONSE_ACCEPT) {
-    char *filename;
-    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
-    g_autoptr(GFile) file = gtk_file_chooser_get_file (chooser);
-    filename = g_file_get_path(file);
-    GWEN_Buffer_Reset(pathBuffer);
-    GWEN_Buffer_AppendString(pathBuffer, filename);
-    g_free(filename);
-
-    gtk_window_destroy (GTK_WINDOW (dialog));
-    return 0;
-  }
-
-  gtk_window_destroy (GTK_WINDOW (dialog));
-
-  return GWEN_ERROR_USER_ABORTED;
+  return 0;
 }
 
 

@@ -15,6 +15,12 @@
 
 #include <gwenhywfar/gui_be.h>
 
+/* Datatype to enable non-blocking dialog callbacks for GTK4 */
+typedef struct {
+  GWEN_GUI_GetFileName_Callback callback;
+  GWEN_BUFFER *buffer;
+  GWEN_DIALOG *dlg;
+} GTK4_GUI_GetFileName_Callback_Wrapper;
 
 
 typedef struct GTK4_GUI GTK4_GUI;
@@ -26,6 +32,7 @@ struct GTK4_GUI {
   GWEN_GUI_CLOSE_DIALOG_FN closeDialogFn;
   GWEN_GUI_RUN_DIALOG_FN runDialogFn;
   GWEN_GUI_GET_FILENAME_FN getFileNameDialogFn;
+  GWEN_GUI_GET_FILENAME_NB_FN getFileNameNonBlockingDialogFn;
 };
 
 static GWENHYWFAR_CB
@@ -58,6 +65,15 @@ int GTK4_Gui_GetFileName(GWEN_GUI *gui,
                          GWEN_BUFFER *pathBuffer,
                          uint32_t guiid);
 
+static GWENHYWFAR_CB
+int GTK4_Gui_GetFileName_NonBlocking(GWEN_GUI *gui,
+                         const char *caption,
+                         GWEN_GUI_FILENAME_TYPE fnt,
+                         uint32_t flags,
+                         const char *patterns,
+                         GWEN_BUFFER *pathBuffer,
+                         GWEN_DIALOG *dlg,
+                         GWEN_GUI_GetFileName_Callback callback);
 
 #endif
 

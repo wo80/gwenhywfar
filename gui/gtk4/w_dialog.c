@@ -180,7 +180,7 @@ int Gtk4Gui_WDialog_AddChildGuiWidget(GWEN_WIDGET *w, GWEN_WIDGET *wChild)
   switch (GWEN_Widget_GetType(w)) {
   case GWEN_Widget_TypeDialog:
     gtk_window_set_child(GTK_WINDOW(g), gChild);
-    return 0;
+    break;
   default:
     DBG_ERROR(GWEN_LOGDOMAIN, "Widget type not implemented for Gtk4Gui_WDialog_AddChildGuiWidget: %d", GWEN_Widget_GetType(w));
     break;
