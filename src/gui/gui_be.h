@@ -215,6 +215,15 @@ typedef int GWENHYWFAR_CB(*GWEN_GUI_GET_FILENAME_FN)(GWEN_GUI *gui,
                                                      GWEN_BUFFER *pathBuffer,
                                                      uint32_t guiid);
 
+typedef int GWENHYWFAR_CB(*GWEN_GUI_GET_FILENAME_NB_FN)(GWEN_GUI *gui,
+                                                     const char *caption,
+                                                     GWEN_GUI_FILENAME_TYPE fnt,
+                                                     uint32_t flags,
+                                                     const char *patterns,
+                                                     GWEN_BUFFER *pathBuffer,
+                                                     GWEN_DIALOG *dlg,
+                                                     GWEN_GUI_GetFileName_Callback callback);
+
 typedef int GWENHYWFAR_CB(*GWEN_GUI_GETSYNCIO_FN)(GWEN_GUI *gui,
                                                   const char *url,
                                                   const char *defaultProto,
@@ -321,6 +330,10 @@ GWEN_GUI_WRITE_DIALOG_PREFS_FN GWEN_Gui_SetWriteDialogPrefsFn(GWEN_GUI *gui,
 
 GWENHYWFAR_API
 GWEN_GUI_GET_FILENAME_FN GWEN_Gui_SetGetFileNameFn(GWEN_GUI *gui, GWEN_GUI_GET_FILENAME_FN f);
+
+
+GWENHYWFAR_API
+GWEN_GUI_GET_FILENAME_NB_FN GWEN_Gui_SetGetFileNameNonBlockingFn(GWEN_GUI *gui, GWEN_GUI_GET_FILENAME_NB_FN f);
 
 
 GWENHYWFAR_API
