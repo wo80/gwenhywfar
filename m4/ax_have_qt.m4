@@ -137,10 +137,9 @@ EOF
 
     if test "$ver" ">" "Qt version 5"; then
       QT_MAJOR_VERSION="6"
-      AC_CHECK_TOOLS([QTPATHS],[qtpaths-qt6 qtpaths6 qtpaths],[false])
-    else
-      AC_CHECK_TOOLS([QTPATHS],[qtpaths-qt5 qtpaths5 qtpaths],[false])
     fi
+    AC_CHECK_TOOLS([QTPATHS],[qtpaths-qt$QT_MAJOR_VERSION qtpaths$QT_MAJOR_VERSION qtpaths],[false],[$PATH:/usr/lib/qt$QT_MAJOR_VERSION:/usr/lib64/qt$QT_MAJOR_VERSION:/usr/lib/qt$QT_MAJOR_VERSION/bin:/usr/lib64/qt$QT_MAJOR_VERSION/bin])
+    AC_PATH_PROG([QTPATHS],[$QTPATHS],[false],[$PATH:/usr/lib/qt$QT_MAJOR_VERSION:/usr/lib64/qt$QT_MAJOR_VERSION:/usr/lib/qt$QT_MAJOR_VERSION/bin:/usr/lib64/qt$QT_MAJOR_VERSION/bin])
 
     ver=`$QTPATHS --version | cut -d' ' -f 2`
     if test "$ver" = "2.0"; then
