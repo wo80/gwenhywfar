@@ -251,6 +251,13 @@ static int _buildSortByMember(TYPEMAKER2_BUILDER *tb, TYPEMAKER2_TYPE *ty)
             return rv;
           }
         }
+        if (flags & TYPEMAKER2_TYPEFLAGS_WITH_TREE2) {
+          rv=TM2C_BuildTree2SortByMember(tb, ty, tm);
+          if (rv<0) {
+            DBG_INFO(GWEN_LOGDOMAIN, "here (%d)", rv);
+            return rv;
+          }
+        }
       }
       tm=Typemaker2_Member_List_Next(tm);
     }
