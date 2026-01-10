@@ -154,6 +154,8 @@ extern "C" {
 /*@{*/
 typedef struct GWEN_TREE2_ELEMENT GWEN_TREE2_ELEMENT;
 
+typedef int (*GWEN_TREE2_COMPARE_CB)(void *p1, void *p2);
+
 
 /** Unlinks (removes) a tree element from the tree it used to
  * belong to. The tree element is not free'd or anything, it is
@@ -235,6 +237,9 @@ void *GWEN_Tree2Element_GetParent(const GWEN_TREE2_ELEMENT *el);
 GWENHYWFAR_API
 uint32_t GWEN_Tree2Element_GetChildrenCount(const GWEN_TREE2_ELEMENT *el);
 
+/** sort direct children of the given element */
+GWENHYWFAR_API void GWEN_Tree2Element_SortChildren(GWEN_TREE2_ELEMENT *el, GWEN_TREE2_COMPARE_CB cb);
+
 /*@}*/
 
 
@@ -276,7 +281,8 @@ GWEN_TREE2_ELEMENT *_tree2_element;
   decl void pr##_Tree2_InsertChild(t *where, t *element); \
   \
   decl void pr##_Tree2_ClearChildren(t *element); \
-  decl void pr##_Tree2_free(t *element);
+  decl void pr##_Tree2_free(t *element); \
+  decl void pr##_Tree2_SortChildren(const t *element, GWEN_TREE2_COMPARE_CB cb);
 
 
 #define GWEN_TREE2_FUNCTION_DEFS_CONST(t, pr) \
@@ -435,7 +441,11 @@ GWEN_TREE2_ELEMENT *_tree2_element;
     return (t*)GWEN_Tree2Element_GetParent(element->_tree2_element);\
   } \
   \
-
+  void pr##_Tree2_SortChildren(const t *element, GWEN_TREE2_COMPARE_CB cb) { \
+    assert(element); \
+    assert(element->_tree2_element);\
+    GWEN_Tree2Element_SortChildren(element->_tree2_element, cb); \
+  }
 
 /**
  * Use this in your code file (*.c) inside the init code for the struct

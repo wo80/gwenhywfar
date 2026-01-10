@@ -101,7 +101,8 @@ iheader_HEADERS=\
  bindata.h \
  param.h \
  param_fns.h \
- endianfns.h
+ endianfns.h \
+ quicksort.h
 
 
 libbase_la_SOURCES=\
@@ -132,7 +133,8 @@ libbase_la_SOURCES=\
  tree2.c \
  simpleptrlist.c \
  multicache.c \
- param.c
+ param.c \
+ quicksort.c
 
 
 sources:

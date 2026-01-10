@@ -1,7 +1,7 @@
 /***************************************************************************
  begin       : Thu Jul 04 2019
  copyright   : (C) 2019 by Martin Preuss
-    email       : martin@libchipcard.de
+ email       : martin@libchipcard.de
 
  ***************************************************************************
  *                                                                         *
@@ -22,7 +22,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -30,8 +29,15 @@
 #define DISABLE_DEBUGLOG
 
 #include "tree2_p.h"
+#include <gwenhywfar/quicksort.h>
 #include <gwenhywfar/misc.h>
 #include <gwenhywfar/debug.h>
+
+#include <stdlib.h>
+
+
+
+static int _compare(const void *a, const void *b, void *f);
 
 
 
@@ -186,6 +192,24 @@ void *GWEN_Tree2Element_GetBelow(const GWEN_TREE2_ELEMENT *el)
 
 
 
+uint32_t GWEN_Tree2Element_GetChildrenCount(const GWEN_TREE2_ELEMENT *el)
+{
+  uint32_t num=0;
+
+  if (el) {
+    const GWEN_TREE2_ELEMENT *child;
+
+    child=el->firstChild;
+    while(child) {
+      num++;
+      child=child->nextElement;
+    }
+  }
+  return 0;
+}
+
+
+
 void *GWEN_Tree2Element_GetFirstChild(const GWEN_TREE2_ELEMENT *el)
 {
   if (el->firstChild)
@@ -209,6 +233,53 @@ void *GWEN_Tree2Element_GetParent(const GWEN_TREE2_ELEMENT *el)
   if (el->parent)
     return el->parent->data;
   return NULL;
+}
+
+
+
+void GWEN_Tree2Element_SortChildren(GWEN_TREE2_ELEMENT *el, GWEN_TREE2_COMPARE_CB cb)
+{
+  int numChildren;
+
+  numChildren=GWEN_Tree2Element_GetChildrenCount(el);
+  if (numChildren) {
+    GWEN_TREE2_ELEMENT **tmpEntries;
+
+    tmpEntries=(GWEN_TREE2_ELEMENT **)malloc((numChildren+1)* sizeof(GWEN_TREE2_ELEMENT *));
+    if (tmpEntries) {
+      GWEN_TREE2_ELEMENT *child;
+      GWEN_TREE2_ELEMENT **sortArrayPtr;
+      int i;
+
+      sortArrayPtr=tmpEntries;
+      while( (child=el->firstChild) ) {
+	GWEN_Tree2_Unlink(child);
+	*(sortArrayPtr++)=child;
+      }
+
+      GWEN_QuickSort((void**)tmpEntries, numChildren, _compare, cb);
+
+      sortArrayPtr=tmpEntries;
+      for (i=0; i<numChildren; i++) {
+	GWEN_Tree2_AddChild(el, *(sortArrayPtr++));
+      }
+      free(tmpEntries);
+    }
+  }
+}
+
+
+
+int _compare(const void *a, const void *b, void *f)
+{
+  GWEN_TREE2_COMPARE_CB cb;
+  const GWEN_TREE2_ELEMENT *elA;
+  const GWEN_TREE2_ELEMENT *elB;
+
+  cb=(GWEN_TREE2_COMPARE_CB) f;
+  elA=(GWEN_TREE2_ELEMENT*) a;
+  elB=(GWEN_TREE2_ELEMENT*) b;
+  return cb(elA->data, elB->data);
 }
 
 
