@@ -132,6 +132,8 @@ void QT5_DialogBox::slotActivated() {
     case GWEN_Widget_TypeHLine:
     case GWEN_Widget_TypeVLine:
     case GWEN_Widget_TypeTextBrowser:
+    case GWEN_Widget_TypeVSplitter:
+    case GWEN_Widget_TypeHSplitter:
       /* nothing to do for these types */
       ;
     }
@@ -201,6 +203,8 @@ void QT5_DialogBox::slotValueChanged() {
     case GWEN_Widget_TypeHLine:
     case GWEN_Widget_TypeVLine:
     case GWEN_Widget_TypeTextBrowser:
+    case GWEN_Widget_TypeVSplitter:
+    case GWEN_Widget_TypeHSplitter:
       /* nothing to do for these types */
       ;
     }
