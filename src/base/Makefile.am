@@ -28,7 +28,9 @@ EXTRA_DIST=$(typefiles) \
   param_fns.c \
   simpleptrlist-t.c simpleptrlist-t.h \
   idlist64-t.c idlist64-t.h \
-  buffer-t.c buffer-t.h
+  buffer-t.c buffer-t.h \
+  quicksort-t.c quicksort-t.h \
+  sort_r.h
 
 
 

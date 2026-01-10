@@ -257,7 +257,7 @@ void GWEN_Tree2Element_SortChildren(GWEN_TREE2_ELEMENT *el, GWEN_TREE2_COMPARE_C
 	*(sortArrayPtr++)=child;
       }
 
-      GWEN_QuickSort((void**)tmpEntries, numChildren, _compare, cb);
+      GWEN_QuickSort((void**)tmpEntries, numChildren, sizeof(GWEN_TREE2_ELEMENT*), _compare, cb);
 
       sortArrayPtr=tmpEntries;
       for (i=0; i<numChildren; i++) {

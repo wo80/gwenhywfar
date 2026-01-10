@@ -1,6 +1,6 @@
 /***************************************************************************
- begin       : Tue Dec 30 2025
- copyright   : (C) 2025 by Martin Preuss
+ begin       : Sat Jan 10 2026
+ copyright   : (C) 2026 by Martin Preuss
  email       : martin@libchipcard.de
 
  ***************************************************************************
@@ -22,42 +22,29 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
+#ifndef GWENHYWFAR_QUICKSORT_T_H
+#define GWENHYWFAR_QUICKSORT_T_H
+
+#include <gwenhywfar/gwenhywfarapi.h>
+#include <gwenhywfar/testframework.h>
+
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include "./quicksort.h"
-#include "./sort_r.h"
 
 
-#define DISABLE_DEBUGLOG
-
-
-/* ------------------------------------------------------------------------------------------------
- * forward declarations
- * ------------------------------------------------------------------------------------------------
- */
+GWENHYWFAR_API int GWEN_Quicksort_AddTests(GWEN_TEST_MODULE *mod);
 
 
 
-
-/* ------------------------------------------------------------------------------------------------
- * implementations
- * ------------------------------------------------------------------------------------------------
- */
-
-void GWEN_QuickSort(void *array, int numElems, int sizeElems, GWEN_QUICKSORT_COMPARE_CB cb, void *arg)
-{
-  sort_r(array, numElems, sizeElems, cb, arg);
+#ifdef __cplusplus
 }
+#endif
 
 
-
-
-
-
-
-/* include tests */
-#include "quicksort-t.c"
+#endif
 
 

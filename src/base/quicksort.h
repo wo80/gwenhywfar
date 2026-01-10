@@ -35,7 +35,7 @@ extern "C" {
 typedef int (*GWEN_QUICKSORT_COMPARE_CB)(const void *p1, const void *p2, void *arg);
 
 
-GWENHYWFAR_API void GWEN_QuickSort(void* array[], int n, GWEN_QUICKSORT_COMPARE_CB cb, void *arg);
+GWENHYWFAR_API void GWEN_QuickSort(void *array, int elemNum, int elemSize, GWEN_QUICKSORT_COMPARE_CB cb, void *arg);
 
 
 

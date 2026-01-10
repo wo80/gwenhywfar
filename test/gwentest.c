@@ -42,6 +42,7 @@
 #include <gwenhywfar/idlist64.h>
 #include <gwenhywfar/timestamp.h>
 #include <gwenhywfar/tag16-t.h>
+#include <gwenhywfar/quicksort-t.h>
 #include <gwenhywfar/testframework.h>
 #include <gwenhywfar/gwenthread.h>
 #ifdef OS_WIN32
@@ -6326,6 +6327,13 @@ int testModules(int argc, char **argv)
     fprintf(stderr, "Adding module failed.\n");
     return 2;
   }
+
+  rv=GWEN_Quicksort_AddTests(TestFramework_GetModulesRoot(tf));
+  if (rv<0) {
+    fprintf(stderr, "Adding module failed.\n");
+    return 2;
+  }
+
 
   argc--;
   argv++;
