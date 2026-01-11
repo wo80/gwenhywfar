@@ -31,12 +31,19 @@
 
 #ifdef GWENHYWFAR_ENABLE_TESTCODE
 
+/* ------------------------------------------------------------------------------------------------
+ * definitions
+ * ------------------------------------------------------------------------------------------------
+ */
+
+#define TEST1_ARRAYSIZE 16
+
+
 
 /* ------------------------------------------------------------------------------------------------
  * forward declarations
  * ------------------------------------------------------------------------------------------------
  */
-
 
 static int GWENHYWFAR_CB test1(GWEN_TEST_MODULE *mod);
 static int _compareInts_cb(const void *pA, const void *pB, void *pArg);
@@ -54,7 +61,7 @@ int GWEN_Quicksort_AddTests(GWEN_TEST_MODULE *mod)
 
   newMod=GWEN_Test_Module_AddModule(mod, "GWEN_Quicksort", NULL);
 
-  GWEN_Test_Module_AddTest(newMod, "test1", test1, NULL);
+  GWEN_Test_Module_AddTest(newMod, "sort integer array", test1, NULL);
 
   return 0;
 }
@@ -69,14 +76,14 @@ int GWEN_Quicksort_AddTests(GWEN_TEST_MODULE *mod)
 
 int test1(GWEN_UNUSED GWEN_TEST_MODULE *mod)
 {
-  int currentArrayOfInts[16] ={64, 84,  3, 95, 45,  3, 65, 46, 45, 12,  7, 39, 23, 54, 73, 99};
-  const int expectedArrayOfInts[16]={ 3,  3,  7, 12, 23, 39, 45, 45, 46, 54, 64, 65, 73, 84, 95, 99};
+  int currentArrayOfInts[TEST1_ARRAYSIZE] ={64, 84,  3, 95, 45,  3, 65, 46, 45, 12,  7, 39, 23, 54, 73, 99};
+  const int expectedArrayOfInts[TEST1_ARRAYSIZE]={ 3,  3,  7, 12, 23, 39, 45, 45, 46, 54, 64, 65, 73, 84, 95, 99};
   int n;
   int argUseCount=0;
   int i;
   int errors=0;
 
-  n=16; //sizeof(initialArrayOfInts);
+  n=TEST1_ARRAYSIZE;
 
   GWEN_QuickSort(currentArrayOfInts, n, sizeof(int), _compareInts_cb, (void*) &argUseCount);
 
@@ -85,11 +92,13 @@ int test1(GWEN_UNUSED GWEN_TEST_MODULE *mod)
     errors++;
   }
 
+#if 0
   /* print array */
   fprintf(stderr, "Array: ");
   for (i=0; i<n; i++)
     fprintf(stderr, "%s%d", i?", ":"", currentArrayOfInts[i]);
   fprintf(stderr, "\n");
+#endif
 
   for (i=0; i<n; i++) {
     if (currentArrayOfInts[i]!=expectedArrayOfInts[i]) {
