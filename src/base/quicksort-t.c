@@ -26,6 +26,7 @@
 
 #include "quicksort-t.h"
 #include <gwenhywfar/error.h>
+#include <gwenhywfar/debug.h>
 
 
 
